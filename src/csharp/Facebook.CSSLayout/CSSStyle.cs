@@ -12,7 +12,7 @@ namespace Facebook.CSSLayout
 	/**
 	 * The CSS style definition for a {@link CSSNode}.
 	 */
-	internal class CSSStyle
+	class CSSStyle
 	{
 		public CSSFlexDirection flexDirection = CSSFlexDirection.Column;
 		public CSSJustify justifyContent = CSSJustify.FlexStart;

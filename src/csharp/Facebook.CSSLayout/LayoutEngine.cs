@@ -17,7 +17,7 @@ namespace Facebook.CSSLayout
 	 * Calculates layouts based on CSS style. See {@link #layoutNode(CSSNode, float)}.
 	 */
 
-	public class LayoutEngine
+	class LayoutEngine
 	{
 
 		enum PositionIndex
@@ -295,7 +295,7 @@ namespace Facebook.CSSLayout
 
 		static boolean isMeasureDefined(CSSNode node)
 		{
-			return node.isMeasureDefined();
+			return node.IsMeasureDefined;
 		}
 
 		static float getDimWithMargin(CSSNode node, CSSFlexDirection axis)

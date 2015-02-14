@@ -129,7 +129,7 @@ namespace Facebook.CSSLayout.Tests
 			root.calculateLayout();
 			markLayoutAppliedForTree(root);
 
-			c1.SetMargin(Spacing.LEFT, 10);
+			c1.SetMargin(SpacingType.Left, 10);
 			root.calculateLayout();
 
 			Assert.True(root.HasNewLayout);

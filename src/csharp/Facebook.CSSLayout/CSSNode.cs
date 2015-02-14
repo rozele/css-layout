@@ -62,29 +62,19 @@ namespace Facebook.CSSLayout
 		[Nullable] MeasureFunction mMeasureFunction = null;
 		LayoutState mLayoutState = LayoutState.DIRTY;
 
-		public int ChildCount { get {  return getChildCount();} }
-
-		internal int getChildCount()
-		{
-			return mChildren.Count;
-		}
+		public int ChildCount { get {  return mChildren.Count;} }
 
 		public CSSNode this[int i]
 		{
-			get { return getChildAt(i); }
+			get { return mChildren[i]; }
 		}
 
-		internal CSSNode getChildAt(int i)
+		public void AddChild(CSSNode child)
 		{
-			return mChildren[i];
+			InsertChild(ChildCount, child);
 		}
 
-		internal void InsertChild(int i, CSSNode child)
-		{
-			addChildAt(child, i);
-		}
-
-		internal void addChildAt(CSSNode child, int i)
+		public void InsertChild(int i, CSSNode child)
 		{
 			if (child.mParent != null)
 			{
@@ -98,22 +88,15 @@ namespace Facebook.CSSLayout
 
 		public void RemoveChildAt(int i)
 		{
-			removeChildAt(i);
-		}
-
-		internal void removeChildAt(int i)
-		{
 			mChildren[i].mParent = null;
 			mChildren.RemoveAt(i);
 			dirty();
 		}
 
-		public CSSNode Parent { get { return getParent(); } }
-
-		[return: Nullable] 
-		internal CSSNode getParent()
+		public CSSNode Parent
 		{
-			return mParent;
+			[return: Nullable]
+			get { return mParent; }
 		}
 
 		/**
@@ -122,11 +105,6 @@ namespace Facebook.CSSLayout
 
 		public int IndexOf(CSSNode child)
 		{
-			return indexOf(child);
-		}
-
-		internal int indexOf(CSSNode child)
-		{
 			return mChildren.IndexOf(child);
 		}
 
@@ -134,16 +112,11 @@ namespace Facebook.CSSLayout
 		{
 			set
 			{
-				setMeasureFunction(value);
-			}
-		}
-
-		internal void setMeasureFunction(MeasureFunction measureFunction)
-		{
-			if (!valuesEqual(mMeasureFunction, measureFunction))
-			{
-				mMeasureFunction = measureFunction;
-				dirty();
+				if (!valuesEqual(mMeasureFunction, value))
+				{
+					mMeasureFunction = value;
+					dirty();
+				}
 			}
 		}
 
@@ -152,14 +125,9 @@ namespace Facebook.CSSLayout
 			get { return mMeasureFunction != null; }
 		}
 
-		internal bool isMeasureDefined()
-		{
-			return mMeasureFunction != null;
-		}
-
 		internal MeasureOutput measure(float width)
 		{
-			if (!isMeasureDefined())
+			if (!IsMeasureDefined)
 			{
 				throw new Exception("Measure function isn't defined!");
 			}
@@ -171,11 +139,6 @@ namespace Facebook.CSSLayout
 	   */
 
 		public void CalculateLayout()
-		{
-			calculateLayout();
-		}
-
-		internal void calculateLayout()
 		{
 			layout.resetResult();
 			LayoutEngine.layoutNode(this, CSSConstants.Undefined);
@@ -251,15 +214,15 @@ namespace Facebook.CSSLayout
 			result.Append(indentation.ToString());
 			result.Append(layout.ToString());
 
-			if (getChildCount() == 0)
+			if (ChildCount == 0)
 			{
 				return;
 			}
 
 			result.Append(", children: [\n");
-			for (var i = 0; i < getChildCount(); i++)
+			for (var i = 0; i < ChildCount; i++)
 			{
-				getChildAt(i).toStringWithIndentation(result, level + 1);
+				this[i].toStringWithIndentation(result, level + 1);
 				result.Append("\n");
 			}
 			result.Append(indentation + "]");
@@ -370,17 +333,17 @@ namespace Facebook.CSSLayout
 			}
 		}
 
-		public void SetMargin(int spacingType, float margin)
+		public void SetMargin(SpacingType spacingType, float margin)
 		{
 			SetSpacing(mMargin, style.margin, spacingType, margin);
 		}
 
-		public void SetPadding(int spacingType, float padding)
+		public void SetPadding(SpacingType spacingType, float padding)
 		{
 			SetSpacing(mPadding, style.padding, spacingType, padding);
 		}
 
-		public void SetBorder(int spacingType, float border)
+		public void SetBorder(SpacingType spacingType, float border)
 		{
 			SetSpacing(mBorder, style.border, spacingType, border);
 		}
@@ -388,12 +351,12 @@ namespace Facebook.CSSLayout
 		protected void SetSpacing(
 			float[] spacingDef,
 			float[] cssStyle,
-			int spacingType,
+			SpacingType spacingType,
 			float spacing)
 		{
-			if (!valuesEqual(spacingDef[spacingType], spacing))
+			if (!valuesEqual(spacingDef[(int)spacingType], spacing))
 			{
-				Spacing.updateSpacing(spacingDef, cssStyle, spacingType, spacing, 0);
+				Spacing.updateSpacing(spacingDef, cssStyle, (int)spacingType, spacing, 0);
 				dirty();
 			}
 		}
@@ -474,5 +437,43 @@ namespace Facebook.CSSLayout
 		public float LayoutY { get { return layout.y; } }
 		public float LayoutWidth { get { return layout.Width; } }
 		public float LayoutHeight { get { return layout.Height; } }
+	}
+
+	internal static class CSSNodeExtensions
+	{
+		public static CSSNode getParent(this CSSNode node)
+		{
+			return node.Parent;
+		}
+
+		public static int getChildCount(this CSSNode node)
+		{
+			return node.ChildCount;
+		}
+
+		public static CSSNode getChildAt(this CSSNode node, int i)
+		{
+			return node[i];
+		}
+
+		public static void addChildAt(this CSSNode node, CSSNode child, int i)
+		{
+			node.InsertChild(i, child);
+		}
+
+		public static void removeChildAt(this CSSNode node, int i)
+		{
+			node.RemoveChildAt(i);
+		}
+
+		public static void setMeasureFunction(this CSSNode node, MeasureFunction measureFunction)
+		{
+			node.MeasureFunction = measureFunction;
+		}
+
+		public static void calculateLayout(this CSSNode node)
+		{
+			node.CalculateLayout();
+		}
 	}
 }

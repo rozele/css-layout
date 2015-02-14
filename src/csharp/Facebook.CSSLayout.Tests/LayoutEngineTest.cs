@@ -47,8 +47,8 @@ public class LayoutEngineTest
 
     public String context = null;
 
-    public new TestCSSNode getChildAt(int i) {
-      return (TestCSSNode) base.getChildAt(i);
+    public TestCSSNode getChildAt(int i) {
+      return (TestCSSNode) base[i];
     }
   }
 

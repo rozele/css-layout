@@ -16,7 +16,7 @@ namespace Facebook.CSSLayout
 	 * this node before calling layout visited us.
 	 */
 
-	public class CachedCSSLayout : CSSLayout 
+	class CachedCSSLayout : CSSLayout 
 	{
 		public float RequestedWidth = CSSConstants.Undefined;
 		public float RequestedHeight = CSSConstants.Undefined;

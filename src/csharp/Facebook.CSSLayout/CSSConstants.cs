@@ -14,13 +14,13 @@ namespace Facebook.CSSLayout
 	public class CSSConstants 
 	{
 		public static readonly float Undefined = float.NaN;
-		internal static readonly float UNDEFINED = Undefined;
 
 		public static bool IsUndefined(float value) 
 		{
 			return float.IsNaN(value);
 		}
 
+		internal static readonly float UNDEFINED = Undefined;
 		internal static readonly Func<float, bool> isUndefined = IsUndefined;
 	}
 }

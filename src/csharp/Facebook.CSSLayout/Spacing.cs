@@ -8,6 +8,18 @@
  */
 namespace Facebook.CSSLayout
 {
+
+	public enum SpacingType
+	{
+		Left = 0,
+		Top = 1,
+		Right = 2,
+		Bottom = 3,
+		Vertical = 4,
+		Horizontal = 5,
+		All = 6
+	}
+
 	/**
 	 * Utility class for handling CSS spacing (padding, margin, and borders). This is mostly necessary
 	 * to properly implement interactions and updates for properties like margin, marginLeft, and
@@ -15,24 +27,17 @@ namespace Facebook.CSSLayout
 	 * for type safety, defaults safety, and simplicity.
 	 */
 
-	internal static class Spacing
+	static class Spacing
 	{
 
 		// Indices into FullSpacingArray and SpacingResultArray
-		public static readonly
-		int LEFT = 0;
-		public static readonly
-		int TOP = 1;
-		public static readonly
-		int RIGHT = 2;
-		public static readonly 
-		int BOTTOM = 3;
-		public static readonly 
-		int VERTICAL = 4;
-		public static readonly 
-		int HORIZONTAL = 5;
-		public static readonly 
-		int ALL = 6;
+		public static readonly int LEFT = (int) SpacingType.Left;
+		public static readonly int TOP = (int) SpacingType.Top;
+		public static readonly int RIGHT = (int) SpacingType.Right;
+		public static readonly int BOTTOM = (int) SpacingType.Bottom;
+		public static readonly int VERTICAL = (int) SpacingType.Vertical;
+		public static readonly int HORIZONTAL = (int) SpacingType.Horizontal;
+		public static readonly int ALL = (int) SpacingType.All;
 
 		/**
 	   * @return an instance of an array that can be used with {@link #updateSpacing}. Stores
@@ -41,7 +46,7 @@ namespace Facebook.CSSLayout
 
 		public static float[] newFullSpacingArray()
 		{
-			return new float[]
+			return new[]
 			{
 				CSSConstants.Undefined,
 				CSSConstants.Undefined,
@@ -70,7 +75,7 @@ namespace Facebook.CSSLayout
 
 		public static float[] newSpacingResultArray(float defaultValue)
 		{
-			return new float[]
+			return new[]
 			{
 				defaultValue,
 				defaultValue,

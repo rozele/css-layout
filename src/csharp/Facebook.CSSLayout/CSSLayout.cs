@@ -14,7 +14,7 @@ namespace Facebook.CSSLayout
 	 * Where the output of {@link LayoutEngine#layoutNode(CSSNode, float)} will go in the CSSNode.
 	 */
 
-	public class CSSLayout
+	class CSSLayout
 	{
 		public float X;
 		public float Y;
