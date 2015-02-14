@@ -21,7 +21,7 @@ namespace Facebook.CSSLayout.Tests
 
 		private void assertTreeHasNewLayout(bool expectedHasNewLayout, CSSNode root)
 		{
-			Assert.AreEqual(expectedHasNewLayout, root.hasNewLayout());
+			Assert.AreEqual(expectedHasNewLayout, root.HasNewLayout);
 
 			for (int i = 0; i < root.getChildCount(); i++)
 			{
@@ -31,7 +31,7 @@ namespace Facebook.CSSLayout.Tests
 
 		private void markLayoutAppliedForTree(CSSNode root)
 		{
-			root.markLayoutSeen();
+			root.MarkLayoutSeen();
 			for (int i = 0; i < root.getChildCount(); i++)
 			{
 				markLayoutAppliedForTree(root.getChildAt(i));
@@ -54,7 +54,7 @@ namespace Facebook.CSSLayout.Tests
 			markLayoutAppliedForTree(root);
 
 			root.calculateLayout();
-			Assert.True(root.hasNewLayout());
+			Assert.True(root.HasNewLayout);
 			assertTreeHasNewLayout(false, c0);
 			assertTreeHasNewLayout(false, c1);
 		}
@@ -68,8 +68,8 @@ namespace Facebook.CSSLayout.Tests
 			CSSNode c0c0 = new CSSNode();
 			CSSNode c0c1 = new CSSNode();
 			CSSNode c1c0 = new CSSNode();
-			c0c1.setStyleWidth(200);
-			c0c1.setStyleHeight(200);
+			c0c1.StyleWidth = 200;
+			c0c1.StyleHeight = 200;
 			root.addChildAt(c0, 0);
 			root.addChildAt(c1, 1);
 			c0.addChildAt(c0c0, 0);
@@ -81,14 +81,14 @@ namespace Facebook.CSSLayout.Tests
 			c0.addChildAt(c0c1, 1);
 
 			root.calculateLayout();
-			Assert.True(root.hasNewLayout());
-			Assert.True(c0.hasNewLayout());
-			Assert.True(c0c1.hasNewLayout());
+			Assert.True(root.HasNewLayout);
+			Assert.True(c0.HasNewLayout);
+			Assert.True(c0c1.HasNewLayout);
 
-			Assert.True(c0c0.hasNewLayout());
-			Assert.True(c1.hasNewLayout());
+			Assert.True(c0c0.HasNewLayout);
+			Assert.True(c1.HasNewLayout);
 
-			Assert.False(c1c0.hasNewLayout());
+			Assert.False(c1c0.HasNewLayout);
 		}
 
 		[Test]
@@ -105,14 +105,14 @@ namespace Facebook.CSSLayout.Tests
 			root.calculateLayout();
 			markLayoutAppliedForTree(root);
 
-			c1.setAlignSelf(CSSAlign.CENTER);
+			c1.AlignSelf = CSSAlign.Center;
 			root.calculateLayout();
 
-			Assert.True(root.hasNewLayout());
-			Assert.True(c1.hasNewLayout());
+			Assert.True(root.HasNewLayout);
+			Assert.True(c1.HasNewLayout);
 
-			Assert.True(c0.hasNewLayout());
-			Assert.False(c0c0.hasNewLayout());
+			Assert.True(c0.HasNewLayout);
+			Assert.False(c0c0.HasNewLayout);
 		}
 
 		[Test]
@@ -129,14 +129,14 @@ namespace Facebook.CSSLayout.Tests
 			root.calculateLayout();
 			markLayoutAppliedForTree(root);
 
-			c1.setMargin(Spacing.LEFT, 10);
+			c1.SetMargin(Spacing.LEFT, 10);
 			root.calculateLayout();
 
-			Assert.True(root.hasNewLayout());
-			Assert.True(c1.hasNewLayout());
+			Assert.True(root.HasNewLayout);
+			Assert.True(c1.HasNewLayout);
 
-			Assert.True(c0.hasNewLayout());
-			Assert.False(c0c0.hasNewLayout());
+			Assert.True(c0.HasNewLayout);
+			Assert.False(c0c0.HasNewLayout);
 		}
 
 		[Test]
@@ -155,15 +155,15 @@ namespace Facebook.CSSLayout.Tests
 			root.calculateLayout();
 			markLayoutAppliedForTree(root);
 
-			c0.setStyleWidth(200);
+			c0.StyleWidth = 200;
 			root.calculateLayout();
 
-			Assert.True(root.hasNewLayout());
-			Assert.True(c0.hasNewLayout());
-			Assert.True(c0c0.hasNewLayout());
+			Assert.True(root.HasNewLayout);
+			Assert.True(c0.HasNewLayout);
+			Assert.True(c0c0.HasNewLayout);
 
-			Assert.True(c1.hasNewLayout());
-			Assert.False(c1c0.hasNewLayout());
+			Assert.True(c1.HasNewLayout);
+			Assert.False(c1c0.HasNewLayout);
 		}
 
 		[Test]
@@ -176,15 +176,15 @@ namespace Facebook.CSSLayout.Tests
 			root.addChildAt(c0, 0);
 			root.addChildAt(c1, 1);
 			c0.addChildAt(c0c0, 0);
-			root.setStyleWidth(200);
+			root.StyleWidth = 200;
 
 			root.calculateLayout();
 			markLayoutAppliedForTree(root);
 
-			root.setStyleWidth(200);
+			root.StyleWidth = 200;
 			root.calculateLayout();
 
-			Assert.True(root.hasNewLayout());
+			Assert.True(root.HasNewLayout);
 			assertTreeHasNewLayout(false, c0);
 			assertTreeHasNewLayout(false, c1);
 		}
@@ -203,13 +203,13 @@ namespace Facebook.CSSLayout.Tests
 			root.calculateLayout();
 			markLayoutAppliedForTree(root);
 
-			c0.setStyleHeight(100);
+			c0.StyleHeight = 100;
 			root.calculateLayout();
 
-			Assert.True(root.hasNewLayout());
-			Assert.True(c0.hasNewLayout());
-			Assert.True(c1.hasNewLayout());
-			Assert.False(c1c0.hasNewLayout());
+			Assert.True(root.HasNewLayout);
+			Assert.True(c0.HasNewLayout);
+			Assert.True(c1.HasNewLayout);
+			Assert.False(c1c0.HasNewLayout);
 		}
 
 		[Test]
@@ -226,19 +226,15 @@ namespace Facebook.CSSLayout.Tests
 			root.calculateLayout();
 			markLayoutAppliedForTree(root);
 
-			c1.setMeasureFunction((node, width, measureOutput) =>
-			{
-				measureOutput.width = 100;
-				measureOutput.height = 20;
-			});
+			c1.setMeasureFunction((node, width) => new MeasureOutput(100, 20));
 
 			root.calculateLayout();
 
-			Assert.True(root.hasNewLayout());
-			Assert.True(c1.hasNewLayout());
+			Assert.True(root.HasNewLayout);
+			Assert.True(c1.HasNewLayout);
 
-			Assert.True(c0.hasNewLayout());
-			Assert.False(c0c0.hasNewLayout());
+			Assert.True(c0.HasNewLayout);
+			Assert.False(c0c0.HasNewLayout);
 		}
 	}
 }

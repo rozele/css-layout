@@ -11,7 +11,7 @@ using System;
 
 namespace Facebook.CSSLayout
 {
-	public static class FloatUtil 
+	internal static class FloatUtil 
 	{
 		const float EPSILON = .00001f;
 

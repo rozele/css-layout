@@ -11,7 +11,10 @@ namespace Facebook.CSSLayout
 {
 	public enum CSSPositionType
 	{
-		RELATIVE,
-		ABSOLUTE,
+		Relative,
+		Absolute,
+
+		RELATIVE=Relative,
+		ABSOLUTE=Absolute
 	}
 }

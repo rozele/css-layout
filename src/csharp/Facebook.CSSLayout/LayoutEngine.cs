@@ -67,10 +67,10 @@ namespace Facebook.CSSLayout
 			switch (dimension)
 			{
 			case DimensionIndex.WIDTH:
-				node.layout.width = value;
+				node.layout.Width = value;
 				break;
 			case DimensionIndex.HEIGHT:
-				node.layout.height = value;
+				node.layout.Height = value;
 				break;
 			default:
 				throw new Exception("Someone added a third dimension...");
@@ -82,9 +82,9 @@ namespace Facebook.CSSLayout
 			switch (dimension)
 			{
 			case DimensionIndex.WIDTH:
-				return node.layout.width;
+				return node.layout.Width;
 			case DimensionIndex.HEIGHT:
-				return node.layout.height;
+				return node.layout.Height;
 			default:
 				throw new Exception("Someone added a third dimension...");
 			}
@@ -271,7 +271,7 @@ namespace Facebook.CSSLayout
 
 		static CSSAlign getAlignItem(CSSNode node, CSSNode child)
 		{
-			if (child.style.alignSelf != CSSAlign.AUTO)
+			if (child.style.alignSelf != CSSAlign.Auto)
 			{
 				return child.style.alignSelf;
 			}
@@ -285,7 +285,7 @@ namespace Facebook.CSSLayout
 
 		static boolean isFlexWrap(CSSNode node)
 		{
-			return node.style.flexWrap == CSSWrap.WRAP;
+			return node.style.flexWrap == CSSWrap.Wrap;
 		}
 
 		static boolean isFlex(CSSNode node)
@@ -308,8 +308,8 @@ namespace Facebook.CSSLayout
 		static boolean needsRelayout(CSSNode node, float parentMaxWidth)
 		{
 			return node.isDirty() ||
-					!FloatUtil.floatsEqual(node.lastLayout.requestedHeight, node.layout.height) ||
-					!FloatUtil.floatsEqual(node.lastLayout.requestedWidth, node.layout.width) ||
+					!FloatUtil.floatsEqual(node.lastLayout.requestedHeight, node.layout.Height) ||
+					!FloatUtil.floatsEqual(node.lastLayout.requestedWidth, node.layout.Width) ||
 					!FloatUtil.floatsEqual(node.lastLayout.parentMaxWidth, parentMaxWidth);
 		}
 
@@ -317,8 +317,8 @@ namespace Facebook.CSSLayout
 		{
 			if (needsRelayout(node, parentMaxWidth))
 			{
-				node.lastLayout.requestedWidth = node.layout.width;
-				node.lastLayout.requestedHeight = node.layout.height;
+				node.lastLayout.requestedWidth = node.layout.Width;
+				node.lastLayout.requestedHeight = node.layout.Height;
 				node.lastLayout.parentMaxWidth = parentMaxWidth;
 
 				layoutNodeImpl(node, parentMaxWidth);
@@ -518,7 +518,7 @@ namespace Facebook.CSSLayout
         alreadyComputedNextLayout = 0;
         mainContentDim = mainContentDim + nextContentDim;
         endLine = i + 1;
-	  }
+      }
   
       // <Loop B> Layout flexible children and allocate empty space
   

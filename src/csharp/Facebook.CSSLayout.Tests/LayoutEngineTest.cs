@@ -18,21 +18,26 @@ namespace Facebook.CSSLayout.Tests
  */
 public class LayoutEngineTest
 {
-	static readonly CSSNode.MeasureFunction sTestMeasureFunction = (node, width, measureOutput) =>
+	static readonly MeasureFunction sTestMeasureFunction = (node, width) =>
 	{
       if (CSSConstants.isUndefined(width)) {
         width = 10000000;
       }
 
       TestCSSNode testNode = (TestCSSNode) node;
-      if (testNode.context.Equals(TestConstants.SMALL_TEXT)) {
-        measureOutput.width = Math.Min(width, TestConstants.SMALL_WIDTH);
-        measureOutput.height = TestConstants.SMALL_HEIGHT;
-      } else if (testNode.context.Equals(TestConstants.LONG_TEXT)) {
-        measureOutput.width = width >= TestConstants.BIG_WIDTH ?
-            TestConstants.BIG_WIDTH : Math.Max(TestConstants.BIG_MIN_WIDTH, width);
-        measureOutput.height = width >= TestConstants.BIG_WIDTH ?
-            TestConstants.SMALL_HEIGHT : TestConstants.BIG_HEIGHT;
+      if (testNode.context.Equals(TestConstants.SMALL_TEXT))
+      {
+	      return new MeasureOutput(
+		      Math.Min(width, TestConstants.SMALL_WIDTH),
+              TestConstants.SMALL_HEIGHT);
+      } else if (testNode.context.Equals(TestConstants.LONG_TEXT))
+      {
+	      return new MeasureOutput(width >= TestConstants.BIG_WIDTH
+		      ? TestConstants.BIG_WIDTH
+		      : Math.Max(TestConstants.BIG_MIN_WIDTH, width),
+		      width >= TestConstants.BIG_WIDTH
+			      ? TestConstants.SMALL_HEIGHT
+			      : TestConstants.BIG_HEIGHT);
       } else {
         throw new Exception("Got unknown test: " + testNode.context);
       }
@@ -69,8 +74,8 @@ public class LayoutEngineTest
     bool doNodesHaveSameLayout =
         areFloatsEqual(a.layout.x, b.layout.x) &&
         areFloatsEqual(a.layout.y, b.layout.y) &&
-        areFloatsEqual(a.layout.width, b.layout.width) &&
-        areFloatsEqual(a.layout.height, b.layout.height);
+        areFloatsEqual(a.layout.Width, b.layout.Width) &&
+        areFloatsEqual(a.layout.Height, b.layout.Height);
     if (!doNodesHaveSameLayout) {
       return false;
     }

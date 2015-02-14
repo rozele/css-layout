@@ -14,6 +14,14 @@ using System.Text;
 namespace Facebook.CSSLayout
 {
 	/**
+	 * Should measure the given node and put the result in the given MeasureOutput.
+	 *
+	 * NB: measure is NOT guaranteed to be threadsafe/re-entrant safe!
+	 */
+
+	public delegate MeasureOutput MeasureFunction(CSSNode node, float width);
+
+	/**
 	 * A CSS Node. It has a style object you can manipulate at {@link #style}. After calling
 	 * {@link #calculateLayout()}, {@link #layout} will be filled with the results of the layout.
 	 */
@@ -29,7 +37,7 @@ namespace Facebook.CSSLayout
 			DIRTY,
 
 			/**
-		 * This node has a new layout relative to the last time {@link #markLayoutSeen()} was called.
+		 * This node has a new layout relative to the last time {@link #MarkLayoutSeen()} was called.
 		 */
 			HAS_NEW_LAYOUT,
 
@@ -39,17 +47,6 @@ namespace Facebook.CSSLayout
 		 */
 			UP_TO_DATE,
 		}
-
-		// Only one copy kept around to keep from allocating a bunch of MeasureOutput objects
-		// NOT THREAD SAFE! NOT RE-ENTRANT SAFE!
-		static readonly MeasureOutput MEASURE_OUTPUT = new MeasureOutput();
-
-		/**
-		 * Should measure the given node and put the result in the given MeasureOutput.
-		 *
-		 * NB: measure is NOT guaranteed to be threadsafe/re-entrant safe!
-		 */
-		public delegate void MeasureFunction(CSSNode node, float width, MeasureOutput measureOutput);
 
 		readonly float[] mMargin = Spacing.newFullSpacingArray();
 		readonly float[] mPadding = Spacing.newFullSpacingArray();
@@ -65,17 +62,29 @@ namespace Facebook.CSSLayout
 		[Nullable] MeasureFunction mMeasureFunction = null;
 		LayoutState mLayoutState = LayoutState.DIRTY;
 
-		public int getChildCount()
+		public int ChildCount { get {  return getChildCount();} }
+
+		internal int getChildCount()
 		{
 			return mChildren.Count;
 		}
 
-		public CSSNode getChildAt(int i)
+		public CSSNode this[int i]
+		{
+			get { return getChildAt(i); }
+		}
+
+		internal CSSNode getChildAt(int i)
 		{
 			return mChildren[i];
 		}
 
-		public void addChildAt(CSSNode child, int i)
+		internal void InsertChild(int i, CSSNode child)
+		{
+			addChildAt(child, i);
+		}
+
+		internal void addChildAt(CSSNode child, int i)
 		{
 			if (child.mParent != null)
 			{
@@ -87,15 +96,22 @@ namespace Facebook.CSSLayout
 			dirty();
 		}
 
-		public void removeChildAt(int i)
+		public void RemoveChildAt(int i)
+		{
+			removeChildAt(i);
+		}
+
+		internal void removeChildAt(int i)
 		{
 			mChildren[i].mParent = null;
 			mChildren.RemoveAt(i);
 			dirty();
 		}
 
+		public CSSNode Parent { get { return getParent(); } }
+
 		[return: Nullable] 
-		public CSSNode getParent()
+		internal CSSNode getParent()
 		{
 			return mParent;
 		}
@@ -104,12 +120,25 @@ namespace Facebook.CSSLayout
 	   * @return the index of the given child, or -1 if the child doesn't exist in this node.
 	   */
 
-		public int indexOf(CSSNode child)
+		public int IndexOf(CSSNode child)
+		{
+			return indexOf(child);
+		}
+
+		internal int indexOf(CSSNode child)
 		{
 			return mChildren.IndexOf(child);
 		}
 
-		public void setMeasureFunction(MeasureFunction measureFunction)
+		public MeasureFunction MeasureFunction
+		{
+			set
+			{
+				setMeasureFunction(value);
+			}
+		}
+
+		internal void setMeasureFunction(MeasureFunction measureFunction)
 		{
 			if (!valuesEqual(mMeasureFunction, measureFunction))
 			{
@@ -118,7 +147,12 @@ namespace Facebook.CSSLayout
 			}
 		}
 
-		public bool isMeasureDefined()
+		public bool IsMeasureDefined 
+		{
+			get { return mMeasureFunction != null; }
+		}
+
+		internal bool isMeasureDefined()
 		{
 			return mMeasureFunction != null;
 		}
@@ -129,20 +163,22 @@ namespace Facebook.CSSLayout
 			{
 				throw new Exception("Measure function isn't defined!");
 			}
-			MEASURE_OUTPUT.height = CSSConstants.UNDEFINED;
-			MEASURE_OUTPUT.width = CSSConstants.UNDEFINED;
-			Assertions.assertNotNull(mMeasureFunction)(this, width, MEASURE_OUTPUT);
-			return MEASURE_OUTPUT;
+			return Assertions.assertNotNull(mMeasureFunction)(this, width);
 		}
 
 		/**
 	   * Performs the actual layout and saves the results in {@link #layout}
 	   */
 
-		public void calculateLayout()
+		public void CalculateLayout()
+		{
+			calculateLayout();
+		}
+
+		internal void calculateLayout()
 		{
 			layout.resetResult();
-			LayoutEngine.layoutNode(this, CSSConstants.UNDEFINED);
+			LayoutEngine.layoutNode(this, CSSConstants.Undefined);
 		}
 
 		/**
@@ -158,9 +194,9 @@ namespace Facebook.CSSLayout
 	   * See {@link LayoutState#HAS_NEW_LAYOUT}.
 	   */
 
-		public bool hasNewLayout()
+		public bool HasNewLayout
 		{
-			return mLayoutState == LayoutState.HAS_NEW_LAYOUT;
+			get { return mLayoutState == LayoutState.HAS_NEW_LAYOUT; }
 		}
 
 		protected void dirty()
@@ -171,7 +207,7 @@ namespace Facebook.CSSLayout
 			}
 			else if (mLayoutState == LayoutState.HAS_NEW_LAYOUT)
 			{
-				throw new InvalidOperationException("Previous layout was ignored! markLayoutSeen() never called");
+				throw new InvalidOperationException("Previous layout was ignored! MarkLayoutSeen() never called");
 			}
 
 			mLayoutState = LayoutState.DIRTY;
@@ -193,9 +229,9 @@ namespace Facebook.CSSLayout
 	   * You must call this each time the layout is generated if the node has a new layout.
 	   */
 
-		public void markLayoutSeen()
+		public void MarkLayoutSeen()
 		{
-			if (!hasNewLayout())
+			if (!HasNewLayout)
 			{
 				throw new InvalidOperationException("Expected node to have a new layout to be seen!");
 			}
@@ -250,85 +286,106 @@ namespace Facebook.CSSLayout
 			return o1.Equals(o2);
 		}
 
-		public void setFlexDirection(CSSFlexDirection flexDirection)
+		public CSSFlexDirection FlexDirection
 		{
-			if (!valuesEqual(style.flexDirection, flexDirection))
+			set
 			{
-				style.flexDirection = flexDirection;
-				dirty();
+				if (!valuesEqual(style.flexDirection, value))
+				{
+					style.flexDirection = value;
+					dirty();
+				}
 			}
 		}
 
-		public void setJustifyContent(CSSJustify justifyContent)
+		public CSSJustify JustifyContent
 		{
-			if (!valuesEqual(style.justifyContent, justifyContent))
+			set
 			{
-				style.justifyContent = justifyContent;
-				dirty();
+				if (!valuesEqual(style.justifyContent, value))
+				{
+					style.justifyContent = value;
+					dirty();
+				}
 			}
 		}
 
-		public void setAlignItems(CSSAlign alignItems)
+		public CSSAlign AlignItems
 		{
-			if (!valuesEqual(style.alignItems, alignItems))
+			set
 			{
-				style.alignItems = alignItems;
-				dirty();
+				if (!valuesEqual(style.alignItems, value))
+				{
+					style.alignItems = value;
+					dirty();
+				}
 			}
 		}
 
-		public void setAlignSelf(CSSAlign alignSelf)
+		public CSSAlign AlignSelf
 		{
-			if (!valuesEqual(style.alignSelf, alignSelf))
+			set
 			{
-				style.alignSelf = alignSelf;
-				dirty();
+				if (!valuesEqual(style.alignSelf, value))
+				{
+					style.alignSelf = value;
+					dirty();
+				}
 			}
 		}
 
-		public void setPositionType(CSSPositionType positionType)
+		public CSSPositionType PositionType
 		{
-			if (!valuesEqual(style.positionType, positionType))
+			set
 			{
-				style.positionType = positionType;
-				dirty();
+				if (!valuesEqual(style.positionType, value))
+				{
+					style.positionType = value;
+					dirty();
+				}
 			}
 		}
 
-		public void setWrap(CSSWrap flexWrap)
+		public CSSWrap Wrap
 		{
-			if (!valuesEqual(style.flexWrap, flexWrap))
+			set
 			{
-				style.flexWrap = flexWrap;
-				dirty();
+				if (!valuesEqual(style.flexWrap, value))
+				{
+					style.flexWrap = value;
+					dirty();
+				}
 			}
 		}
 
-		public void setFlex(float flex)
+		public float Flex
 		{
-			if (!valuesEqual(style.flex, flex))
+			set
 			{
-				style.flex = flex;
-				dirty();
+				if (!valuesEqual(style.flex, value))
+				{
+					style.flex = value;
+					dirty();
+				}
 			}
 		}
 
-		public void setMargin(int spacingType, float margin)
+		public void SetMargin(int spacingType, float margin)
 		{
-			setSpacing(mMargin, style.margin, spacingType, margin);
+			SetSpacing(mMargin, style.margin, spacingType, margin);
 		}
 
-		public void setPadding(int spacingType, float padding)
+		public void SetPadding(int spacingType, float padding)
 		{
-			setSpacing(mPadding, style.padding, spacingType, padding);
+			SetSpacing(mPadding, style.padding, spacingType, padding);
 		}
 
-		public void setBorder(int spacingType, float border)
+		public void SetBorder(int spacingType, float border)
 		{
-			setSpacing(mBorder, style.border, spacingType, border);
+			SetSpacing(mBorder, style.border, spacingType, border);
 		}
 
-		protected void setSpacing(
+		protected void SetSpacing(
 			float[] spacingDef,
 			float[] cssStyle,
 			int spacingType,
@@ -341,78 +398,81 @@ namespace Facebook.CSSLayout
 			}
 		}
 
-		public void setPositionTop(float positionTop)
+		public float PositionTop
 		{
-			if (!valuesEqual(style.positionTop, positionTop))
+			set
 			{
-				style.positionTop = positionTop;
-				dirty();
+				if (!valuesEqual(style.positionTop, value))
+				{
+					style.positionTop = value;
+					dirty();
+				}
 			}
 		}
 
-		public void setPositionBottom(float positionBottom)
+		public float PositionBottom
 		{
-			if (!valuesEqual(style.positionBottom, positionBottom))
+			set
 			{
-				style.positionBottom = positionBottom;
-				dirty();
+				if (!valuesEqual(style.positionBottom, value))
+				{
+					style.positionBottom = value;
+					dirty();
+				}
 			}
 		}
 
-		public void setPositionLeft(float positionLeft)
+		public float PositionLeft
 		{
-			if (!valuesEqual(style.positionLeft, positionLeft))
+			set
 			{
-				style.positionLeft = positionLeft;
-				dirty();
+				if (!valuesEqual(style.positionLeft, value))
+				{
+					style.positionLeft = value;
+					dirty();
+				}
 			}
 		}
 
-		public void setPositionRight(float positionRight)
+		public float PositionRight
 		{
-			if (!valuesEqual(style.positionRight, positionRight))
+			set
 			{
-				style.positionRight = positionRight;
-				dirty();
+				if (!valuesEqual(style.positionRight, value))
+				{
+					style.positionRight = value;
+					dirty();
+				}
 			}
 		}
 
-		public void setStyleWidth(float width)
+		public float StyleWidth
 		{
-			if (!valuesEqual(style.width, width))
+			set
 			{
-				style.width = width;
-				dirty();
+				if (!valuesEqual(style.width, value))
+				{
+					style.width = value;
+					dirty();
+				}
 			}
 		}
 
-		public void setStyleHeight(float height)
+		public float StyleHeight
 		{
-			if (!valuesEqual(style.height, height))
+			set
 			{
-				style.height = height;
-				dirty();
+				if (!valuesEqual(style.height, value))
+				{
+					style.height = value;
+					dirty();
+				}
 			}
 		}
 
-		public float getLayoutX()
-		{
-			return layout.x;
-		}
-
-		public float getLayoutY()
-		{
-			return layout.y;
-		}
-
-		public float getLayoutWidth()
-		{
-			return layout.width;
-		}
-
-		public float getLayoutHeight()
-		{
-			return layout.height;
-		}
+		public float LayoutX { get { return layout.X; } }
+		public float LayoutY { get { return layout.y; } }
+		public float LayoutWidth { get { return layout.Width; } }
+		public float LayoutHeight { get { return layout.Height; } }
 	}
 }

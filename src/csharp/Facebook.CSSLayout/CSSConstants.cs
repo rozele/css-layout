@@ -7,15 +7,20 @@
  * of patent rights can be found in the PATENTS file in the same directory.
  */
 
+using System;
+
 namespace Facebook.CSSLayout
 {
 	public class CSSConstants 
 	{
-		public static readonly float UNDEFINED = float.NaN;
+		public static readonly float Undefined = float.NaN;
+		internal static readonly float UNDEFINED = Undefined;
 
-		public static bool isUndefined(float value) 
+		public static bool IsUndefined(float value) 
 		{
 			return float.IsNaN(value);
 		}
+
+		internal static readonly Func<float, bool> isUndefined = IsUndefined;
 	}
 }

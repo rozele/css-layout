@@ -11,7 +11,10 @@ namespace Facebook.CSSLayout
 {
 	public enum CSSFlexDirection
 	{
-		COLUMN,
-		ROW,
+		Column,
+		Row,
+
+		COLUMN = Column,
+		ROW = Row
 	}
 }

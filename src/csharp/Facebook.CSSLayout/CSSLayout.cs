@@ -16,10 +16,15 @@ namespace Facebook.CSSLayout
 
 	public class CSSLayout
 	{
-		public float x;
-		public float y;
-		public float width = CSSConstants.UNDEFINED;
-		public float height = CSSConstants.UNDEFINED;
+		public float X;
+		public float Y;
+		public float Width = CSSConstants.Undefined;
+		public float Height = CSSConstants.Undefined;
+
+		internal float x { get { return X; } set { X = value; } }
+		internal float y { get { return Y; } set { Y = value; } }
+		internal float width { get { return Width; } set { Width = value; } }
+		internal float height { get { return Height; } set { Height = value; } }
 
 		/**
 		* This should always get called before calling {@link LayoutEngine#layoutNode(CSSNode, float)}
@@ -27,27 +32,27 @@ namespace Facebook.CSSLayout
 
 		public void resetResult()
 		{
-			x = 0;
+			X = 0;
 			y = 0;
-			width = CSSConstants.UNDEFINED;
-			height = CSSConstants.UNDEFINED;
+			Width = CSSConstants.Undefined;
+			Height = CSSConstants.Undefined;
 		}
 
 		public void copy(CSSLayout layout)
 		{
-			x = layout.x;
+			X = layout.X;
 			y = layout.y;
-			width = layout.width;
-			height = layout.height;
+			Width = layout.Width;
+			Height = layout.Height;
 		}
 
 		public override string ToString()
 		{
-			return "layout: {" +
-					"x: " + x + ", " +
-					"y: " + y + ", " +
-					"width: " + width + ", " +
-					"height: " + height +
+			return "Layout: {" +
+					"X: " + X + ", " +
+					"Y: " + y + ", " +
+					"Width: " + Width + ", " +
+					"Height: " + Height +
 					"}";
 		}
 	}

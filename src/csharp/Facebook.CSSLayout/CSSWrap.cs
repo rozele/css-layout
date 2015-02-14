@@ -10,7 +10,10 @@ namespace Facebook.CSSLayout
 {
 	public enum CSSWrap
 	{
-		NOWRAP,
-		WRAP,
+		NoWrap,
+		Wrap,
+
+		NOWRAP=NoWrap,
+		WRAP=Wrap
 	}
 }

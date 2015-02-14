@@ -10,10 +10,16 @@ namespace Facebook.CSSLayout
 {
 	public enum CSSAlign
 	{
-		AUTO,
-		FLEX_START,
-		CENTER,
-		FLEX_END,
-		STRETCH,
+		Auto,
+		FlexStart,
+		Center,
+		FlexEnd,
+		Stretch,
+
+		AUTO=Auto,
+		FLEX_START=FlexStart,
+		CENTER=Center,
+		FLEX_END=FlexEnd,
+		STRETCH=Stretch
 	}
 }

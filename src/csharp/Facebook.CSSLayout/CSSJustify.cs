@@ -11,10 +11,16 @@ namespace Facebook.CSSLayout
 {
 	public enum CSSJustify
 	{
-		FLEX_START,
-		CENTER,
-		FLEX_END,
-		SPACE_BETWEEN,
-		SPACE_AROUND,
+		FlexStart,
+		Center,
+		FlexEnd,
+		SpaceBetween,
+		SpaceAround,
+
+		FLEX_START=FlexStart,
+		CENTER=Center,
+		FLEX_END=FlexEnd,
+		SPACE_BETWEEN=SpaceBetween,
+		SPACE_AROUND=SpaceAround
 	}
 }

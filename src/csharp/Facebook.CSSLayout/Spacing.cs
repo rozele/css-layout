@@ -15,7 +15,7 @@ namespace Facebook.CSSLayout
 	 * for type safety, defaults safety, and simplicity.
 	 */
 
-	public class Spacing
+	internal static class Spacing
 	{
 
 		// Indices into FullSpacingArray and SpacingResultArray
@@ -43,14 +43,14 @@ namespace Facebook.CSSLayout
 		{
 			return new float[]
 			{
-				CSSConstants.UNDEFINED,
-				CSSConstants.UNDEFINED,
-				CSSConstants.UNDEFINED,
-				CSSConstants.UNDEFINED,
-				CSSConstants.UNDEFINED,
-				CSSConstants.UNDEFINED,
-				CSSConstants.UNDEFINED,
-				CSSConstants.UNDEFINED,
+				CSSConstants.Undefined,
+				CSSConstants.Undefined,
+				CSSConstants.Undefined,
+				CSSConstants.Undefined,
+				CSSConstants.Undefined,
+				CSSConstants.Undefined,
+				CSSConstants.Undefined,
+				CSSConstants.Undefined,
 			};
 		}
 
@@ -95,35 +95,35 @@ namespace Facebook.CSSLayout
 		{
 			fullSpacing[spacingType] = value;
 			spacingResult[Spacing.TOP] =
-				!CSSConstants.isUndefined(fullSpacing[Spacing.TOP])
+				!CSSConstants.IsUndefined(fullSpacing[Spacing.TOP])
 					? fullSpacing[Spacing.TOP]
-					: !CSSConstants.isUndefined(fullSpacing[Spacing.VERTICAL])
+					: !CSSConstants.IsUndefined(fullSpacing[Spacing.VERTICAL])
 						? fullSpacing[Spacing.VERTICAL]
-						: !CSSConstants.isUndefined(fullSpacing[Spacing.ALL])
+						: !CSSConstants.IsUndefined(fullSpacing[Spacing.ALL])
 							? fullSpacing[Spacing.ALL]
 							: defaultValue;
 			spacingResult[Spacing.BOTTOM] =
-				!CSSConstants.isUndefined(fullSpacing[Spacing.BOTTOM])
+				!CSSConstants.IsUndefined(fullSpacing[Spacing.BOTTOM])
 					? fullSpacing[Spacing.BOTTOM]
-					: !CSSConstants.isUndefined(fullSpacing[Spacing.VERTICAL])
+					: !CSSConstants.IsUndefined(fullSpacing[Spacing.VERTICAL])
 						? fullSpacing[Spacing.VERTICAL]
-						: !CSSConstants.isUndefined(fullSpacing[Spacing.ALL])
+						: !CSSConstants.IsUndefined(fullSpacing[Spacing.ALL])
 							? fullSpacing[Spacing.ALL]
 							: defaultValue;
 			spacingResult[Spacing.LEFT] =
-				!CSSConstants.isUndefined(fullSpacing[Spacing.LEFT])
+				!CSSConstants.IsUndefined(fullSpacing[Spacing.LEFT])
 					? fullSpacing[Spacing.LEFT]
-					: !CSSConstants.isUndefined(fullSpacing[Spacing.HORIZONTAL])
+					: !CSSConstants.IsUndefined(fullSpacing[Spacing.HORIZONTAL])
 						? fullSpacing[Spacing.HORIZONTAL]
-						: !CSSConstants.isUndefined(fullSpacing[Spacing.ALL])
+						: !CSSConstants.IsUndefined(fullSpacing[Spacing.ALL])
 							? fullSpacing[Spacing.ALL]
 							: defaultValue;
 			spacingResult[Spacing.RIGHT] =
-				!CSSConstants.isUndefined(fullSpacing[Spacing.RIGHT])
+				!CSSConstants.IsUndefined(fullSpacing[Spacing.RIGHT])
 					? fullSpacing[Spacing.RIGHT]
-					: !CSSConstants.isUndefined(fullSpacing[Spacing.HORIZONTAL])
+					: !CSSConstants.IsUndefined(fullSpacing[Spacing.HORIZONTAL])
 						? fullSpacing[Spacing.HORIZONTAL]
-						: !CSSConstants.isUndefined(fullSpacing[Spacing.ALL])
+						: !CSSConstants.IsUndefined(fullSpacing[Spacing.ALL])
 							? fullSpacing[Spacing.ALL]
 							: defaultValue;
 		}

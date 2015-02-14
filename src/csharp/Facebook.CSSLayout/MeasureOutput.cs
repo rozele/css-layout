@@ -11,10 +11,18 @@ namespace Facebook.CSSLayout
 	/**
 	 * POJO to hold the output of the measure function.
 	 */
-	public class MeasureOutput
+	public struct MeasureOutput
 	{
-		public float width;
-		public float height;
+		public MeasureOutput(float width, float height)
+		{
+			Width = width;
+			Height = height;
+		}
+
+		public readonly float Width;
+		public readonly float Height;
+
+		internal float width { get { return Width; } }
+		internal float height { get { return Height; } }
 	}
 }
-	

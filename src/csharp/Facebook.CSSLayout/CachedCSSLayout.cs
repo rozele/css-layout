@@ -12,14 +12,18 @@ namespace Facebook.CSSLayout
 	
 	/**
 	 * CSSLayout with additional information about the conditions under which it was generated.
-	 * {@link #requestedWidth} and {@link #requestedHeight} are the width and height the parent set on
+	 * {@link #RequestedWidth} and {@link #RequestedHeight} are the width and height the parent set on
 	 * this node before calling layout visited us.
 	 */
 
 	public class CachedCSSLayout : CSSLayout 
 	{
-		public float requestedWidth = CSSConstants.UNDEFINED;
-		public float requestedHeight = CSSConstants.UNDEFINED;
-		public float parentMaxWidth = CSSConstants.UNDEFINED;
+		public float RequestedWidth = CSSConstants.Undefined;
+		public float RequestedHeight = CSSConstants.Undefined;
+		public float ParentMaxWidth = CSSConstants.Undefined;
+
+		internal float requestedWidth { get { return RequestedWidth; } set { RequestedWidth = value; } }
+		internal float requestedHeight { get { return RequestedHeight; } set { RequestedHeight = value; } }
+		internal float parentMaxWidth { get { return ParentMaxWidth; } set { ParentMaxWidth = value; } }
 	}
 }
