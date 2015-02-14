@@ -518,7 +518,7 @@ namespace Facebook.CSSLayout
         alreadyComputedNextLayout = 0;
         mainContentDim = mainContentDim + nextContentDim;
         endLine = i + 1;
-      }
+	  }
   
       // <Loop B> Layout flexible children and allocate empty space
   

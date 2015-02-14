@@ -113,7 +113,7 @@ var CSharpTranspiler = {
     var allTestsInCSharp = [];
     for (var i = 0; i < allTestsInC.length; i++) {
       allTestsInCSharp[i] =
-          "  @Test\n" +
+          "  [Test]\n" +
           "  public void testCase" + i + "()\n" +
           __transpileSingleTestToCSharp(allTestsInC[i]);
     }

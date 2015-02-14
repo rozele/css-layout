@@ -6,227 +6,239 @@
  * LICENSE file in the root directory of this source tree. An additional grant
  * of patent rights can be found in the PATENTS file in the same directory.
  */
-package com.facebook.csslayout;
 
-import org.junit.Test;
+using NUnit.Framework;
 
-import static junit.framework.Assert.*;
+namespace Facebook.CSSLayout.Tests
+{
 
-/**
- * Tests for {@link LayoutEngine} and {@link CSSNode} to make sure layouts are only generated when
- * needed.
- */
-public class LayoutCachingTest {
+	/**
+	 * Tests for {@link LayoutEngine} and {@link CSSNode} to make sure layouts are only generated when
+	 * needed.
+	 */
+	public class LayoutCachingTest
+	{
 
-  private void assertTreeHasNewLayout(boolean expectedHasNewLayout, CSSNode root) {
-    assertEquals(expectedHasNewLayout, root.hasNewLayout());
+		private void assertTreeHasNewLayout(bool expectedHasNewLayout, CSSNode root)
+		{
+			Assert.AreEqual(expectedHasNewLayout, root.hasNewLayout());
 
-    for (int i = 0; i < root.getChildCount(); i++) {
-      assertTreeHasNewLayout(expectedHasNewLayout, root.getChildAt(i));
-    }
-  }
+			for (int i = 0; i < root.getChildCount(); i++)
+			{
+				assertTreeHasNewLayout(expectedHasNewLayout, root.getChildAt(i));
+			}
+		}
 
-  private void markLayoutAppliedForTree(CSSNode root) {
-    root.markLayoutSeen();
-    for (int i = 0; i < root.getChildCount(); i++) {
-      markLayoutAppliedForTree(root.getChildAt(i));
-    }
-  }
+		private void markLayoutAppliedForTree(CSSNode root)
+		{
+			root.markLayoutSeen();
+			for (int i = 0; i < root.getChildCount(); i++)
+			{
+				markLayoutAppliedForTree(root.getChildAt(i));
+			}
+		}
 
-  @Test
-  public void testCachesFullTree() {
-    CSSNode root = new CSSNode();
-    CSSNode c0 = new CSSNode();
-    CSSNode c1 = new CSSNode();
-    CSSNode c0c0 = new CSSNode();
-    root.addChildAt(c0, 0);
-    root.addChildAt(c1, 1);
-    c0.addChildAt(c0c0, 0);
+		[Test]
+		public void testCachesFullTree()
+		{
+			CSSNode root = new CSSNode();
+			CSSNode c0 = new CSSNode();
+			CSSNode c1 = new CSSNode();
+			CSSNode c0c0 = new CSSNode();
+			root.addChildAt(c0, 0);
+			root.addChildAt(c1, 1);
+			c0.addChildAt(c0c0, 0);
 
-    root.calculateLayout();
-    assertTreeHasNewLayout(true, root);
-    markLayoutAppliedForTree(root);
+			root.calculateLayout();
+			assertTreeHasNewLayout(true, root);
+			markLayoutAppliedForTree(root);
 
-    root.calculateLayout();
-    assertTrue(root.hasNewLayout());
-    assertTreeHasNewLayout(false, c0);
-    assertTreeHasNewLayout(false, c1);
-  }
+			root.calculateLayout();
+			Assert.True(root.hasNewLayout());
+			assertTreeHasNewLayout(false, c0);
+			assertTreeHasNewLayout(false, c1);
+		}
 
-  @Test
-  public void testInvalidatesCacheWhenChildAdded() {
-    CSSNode root = new CSSNode();
-    CSSNode c0 = new CSSNode();
-    CSSNode c1 = new CSSNode();
-    CSSNode c0c0 = new CSSNode();
-    CSSNode c0c1 = new CSSNode();
-    CSSNode c1c0 = new CSSNode();
-    c0c1.setStyleWidth(200);
-    c0c1.setStyleHeight(200);
-    root.addChildAt(c0, 0);
-    root.addChildAt(c1, 1);
-    c0.addChildAt(c0c0, 0);
-    c0c0.addChildAt(c1c0, 0);
+		[Test]
+		public void testInvalidatesCacheWhenChildAdded()
+		{
+			CSSNode root = new CSSNode();
+			CSSNode c0 = new CSSNode();
+			CSSNode c1 = new CSSNode();
+			CSSNode c0c0 = new CSSNode();
+			CSSNode c0c1 = new CSSNode();
+			CSSNode c1c0 = new CSSNode();
+			c0c1.setStyleWidth(200);
+			c0c1.setStyleHeight(200);
+			root.addChildAt(c0, 0);
+			root.addChildAt(c1, 1);
+			c0.addChildAt(c0c0, 0);
+			c0c0.addChildAt(c1c0, 0);
 
-    root.calculateLayout();
-    markLayoutAppliedForTree(root);
+			root.calculateLayout();
+			markLayoutAppliedForTree(root);
 
-    c0.addChildAt(c0c1, 1);
+			c0.addChildAt(c0c1, 1);
 
-    root.calculateLayout();
-    assertTrue(root.hasNewLayout());
-    assertTrue(c0.hasNewLayout());
-    assertTrue(c0c1.hasNewLayout());
+			root.calculateLayout();
+			Assert.True(root.hasNewLayout());
+			Assert.True(c0.hasNewLayout());
+			Assert.True(c0c1.hasNewLayout());
 
-    assertTrue(c0c0.hasNewLayout());
-    assertTrue(c1.hasNewLayout());
+			Assert.True(c0c0.hasNewLayout());
+			Assert.True(c1.hasNewLayout());
 
-    assertFalse(c1c0.hasNewLayout());
-  }
+			Assert.False(c1c0.hasNewLayout());
+		}
 
-  @Test
-  public void testInvalidatesCacheWhenEnumPropertyChanges() {
-    CSSNode root = new CSSNode();
-    CSSNode c0 = new CSSNode();
-    CSSNode c1 = new CSSNode();
-    CSSNode c0c0 = new CSSNode();
-    root.addChildAt(c0, 0);
-    root.addChildAt(c1, 1);
-    c0.addChildAt(c0c0, 0);
+		[Test]
+		public void testInvalidatesCacheWhenEnumPropertyChanges()
+		{
+			CSSNode root = new CSSNode();
+			CSSNode c0 = new CSSNode();
+			CSSNode c1 = new CSSNode();
+			CSSNode c0c0 = new CSSNode();
+			root.addChildAt(c0, 0);
+			root.addChildAt(c1, 1);
+			c0.addChildAt(c0c0, 0);
 
-    root.calculateLayout();
-    markLayoutAppliedForTree(root);
+			root.calculateLayout();
+			markLayoutAppliedForTree(root);
 
-    c1.setAlignSelf(CSSAlign.CENTER);
-    root.calculateLayout();
+			c1.setAlignSelf(CSSAlign.CENTER);
+			root.calculateLayout();
 
-    assertTrue(root.hasNewLayout());
-    assertTrue(c1.hasNewLayout());
+			Assert.True(root.hasNewLayout());
+			Assert.True(c1.hasNewLayout());
 
-    assertTrue(c0.hasNewLayout());
-    assertFalse(c0c0.hasNewLayout());
-  }
+			Assert.True(c0.hasNewLayout());
+			Assert.False(c0c0.hasNewLayout());
+		}
 
-  @Test
-  public void testInvalidatesCacheWhenFloatPropertyChanges() {
-    CSSNode root = new CSSNode();
-    CSSNode c0 = new CSSNode();
-    CSSNode c1 = new CSSNode();
-    CSSNode c0c0 = new CSSNode();
-    root.addChildAt(c0, 0);
-    root.addChildAt(c1, 1);
-    c0.addChildAt(c0c0, 0);
+		[Test]
+		public void testInvalidatesCacheWhenFloatPropertyChanges()
+		{
+			CSSNode root = new CSSNode();
+			CSSNode c0 = new CSSNode();
+			CSSNode c1 = new CSSNode();
+			CSSNode c0c0 = new CSSNode();
+			root.addChildAt(c0, 0);
+			root.addChildAt(c1, 1);
+			c0.addChildAt(c0c0, 0);
 
-    root.calculateLayout();
-    markLayoutAppliedForTree(root);
+			root.calculateLayout();
+			markLayoutAppliedForTree(root);
 
-    c1.setMargin(Spacing.LEFT, 10);
-    root.calculateLayout();
+			c1.setMargin(Spacing.LEFT, 10);
+			root.calculateLayout();
 
-    assertTrue(root.hasNewLayout());
-    assertTrue(c1.hasNewLayout());
+			Assert.True(root.hasNewLayout());
+			Assert.True(c1.hasNewLayout());
 
-    assertTrue(c0.hasNewLayout());
-    assertFalse(c0c0.hasNewLayout());
-  }
+			Assert.True(c0.hasNewLayout());
+			Assert.False(c0c0.hasNewLayout());
+		}
 
-  @Test
-  public void testInvalidatesFullTreeWhenParentWidthChanges() {
-    CSSNode root = new CSSNode();
-    CSSNode c0 = new CSSNode();
-    CSSNode c1 = new CSSNode();
-    CSSNode c0c0 = new CSSNode();
-    CSSNode c1c0 = new CSSNode();
-    root.addChildAt(c0, 0);
-    root.addChildAt(c1, 1);
-    c0.addChildAt(c0c0, 0);
-    c1.addChildAt(c1c0, 0);
+		[Test]
+		public void testInvalidatesFullTreeWhenParentWidthChanges()
+		{
+			CSSNode root = new CSSNode();
+			CSSNode c0 = new CSSNode();
+			CSSNode c1 = new CSSNode();
+			CSSNode c0c0 = new CSSNode();
+			CSSNode c1c0 = new CSSNode();
+			root.addChildAt(c0, 0);
+			root.addChildAt(c1, 1);
+			c0.addChildAt(c0c0, 0);
+			c1.addChildAt(c1c0, 0);
 
-    root.calculateLayout();
-    markLayoutAppliedForTree(root);
+			root.calculateLayout();
+			markLayoutAppliedForTree(root);
 
-    c0.setStyleWidth(200);
-    root.calculateLayout();
+			c0.setStyleWidth(200);
+			root.calculateLayout();
 
-    assertTrue(root.hasNewLayout());
-    assertTrue(c0.hasNewLayout());
-    assertTrue(c0c0.hasNewLayout());
+			Assert.True(root.hasNewLayout());
+			Assert.True(c0.hasNewLayout());
+			Assert.True(c0c0.hasNewLayout());
 
-    assertTrue(c1.hasNewLayout());
-    assertFalse(c1c0.hasNewLayout());
-  }
+			Assert.True(c1.hasNewLayout());
+			Assert.False(c1c0.hasNewLayout());
+		}
 
-  @Test
-  public void testDoesNotInvalidateCacheWhenPropertyIsTheSame() {
-    CSSNode root = new CSSNode();
-    CSSNode c0 = new CSSNode();
-    CSSNode c1 = new CSSNode();
-    CSSNode c0c0 = new CSSNode();
-    root.addChildAt(c0, 0);
-    root.addChildAt(c1, 1);
-    c0.addChildAt(c0c0, 0);
-    root.setStyleWidth(200);
+		[Test]
+		public void testDoesNotInvalidateCacheWhenPropertyIsTheSame()
+		{
+			CSSNode root = new CSSNode();
+			CSSNode c0 = new CSSNode();
+			CSSNode c1 = new CSSNode();
+			CSSNode c0c0 = new CSSNode();
+			root.addChildAt(c0, 0);
+			root.addChildAt(c1, 1);
+			c0.addChildAt(c0c0, 0);
+			root.setStyleWidth(200);
 
-    root.calculateLayout();
-    markLayoutAppliedForTree(root);
+			root.calculateLayout();
+			markLayoutAppliedForTree(root);
 
-    root.setStyleWidth(200);
-    root.calculateLayout();
+			root.setStyleWidth(200);
+			root.calculateLayout();
 
-    assertTrue(root.hasNewLayout());
-    assertTreeHasNewLayout(false, c0);
-    assertTreeHasNewLayout(false, c1);
-  }
+			Assert.True(root.hasNewLayout());
+			assertTreeHasNewLayout(false, c0);
+			assertTreeHasNewLayout(false, c1);
+		}
 
-  @Test
-  public void testInvalidateCacheWhenHeightChangesPosition() {
-    CSSNode root = new CSSNode();
-    CSSNode c0 = new CSSNode();
-    CSSNode c1 = new CSSNode();
-    CSSNode c1c0 = new CSSNode();
-    root.addChildAt(c0, 0);
-    root.addChildAt(c1, 1);
-    c1.addChildAt(c1c0, 0);
+		[Test]
+		public void testInvalidateCacheWhenHeightChangesPosition()
+		{
+			CSSNode root = new CSSNode();
+			CSSNode c0 = new CSSNode();
+			CSSNode c1 = new CSSNode();
+			CSSNode c1c0 = new CSSNode();
+			root.addChildAt(c0, 0);
+			root.addChildAt(c1, 1);
+			c1.addChildAt(c1c0, 0);
 
-    root.calculateLayout();
-    markLayoutAppliedForTree(root);
+			root.calculateLayout();
+			markLayoutAppliedForTree(root);
 
-    c0.setStyleHeight(100);
-    root.calculateLayout();
+			c0.setStyleHeight(100);
+			root.calculateLayout();
 
-    assertTrue(root.hasNewLayout());
-    assertTrue(c0.hasNewLayout());
-    assertTrue(c1.hasNewLayout());
-    assertFalse(c1c0.hasNewLayout());
-  }
+			Assert.True(root.hasNewLayout());
+			Assert.True(c0.hasNewLayout());
+			Assert.True(c1.hasNewLayout());
+			Assert.False(c1c0.hasNewLayout());
+		}
 
-  @Test
-  public void testInvalidatesOnNewMeasureFunction() {
-    CSSNode root = new CSSNode();
-    CSSNode c0 = new CSSNode();
-    CSSNode c1 = new CSSNode();
-    CSSNode c0c0 = new CSSNode();
-    root.addChildAt(c0, 0);
-    root.addChildAt(c1, 1);
-    c0.addChildAt(c0c0, 0);
+		[Test]
+		public void testInvalidatesOnNewMeasureFunction()
+		{
+			CSSNode root = new CSSNode();
+			CSSNode c0 = new CSSNode();
+			CSSNode c1 = new CSSNode();
+			CSSNode c0c0 = new CSSNode();
+			root.addChildAt(c0, 0);
+			root.addChildAt(c1, 1);
+			c0.addChildAt(c0c0, 0);
 
-    root.calculateLayout();
-    markLayoutAppliedForTree(root);
+			root.calculateLayout();
+			markLayoutAppliedForTree(root);
 
-    c1.setMeasureFunction(new CSSNode.MeasureFunction() {
-      @Override
-      public void measure(CSSNode node, float width, MeasureOutput measureOutput) {
-        measureOutput.width = 100;
-        measureOutput.height = 20;
-      }
-    });
+			c1.setMeasureFunction((node, width, measureOutput) =>
+			{
+				measureOutput.width = 100;
+				measureOutput.height = 20;
+			});
 
-    root.calculateLayout();
+			root.calculateLayout();
 
-    assertTrue(root.hasNewLayout());
-    assertTrue(c1.hasNewLayout());
+			Assert.True(root.hasNewLayout());
+			Assert.True(c1.hasNewLayout());
 
-    assertTrue(c0.hasNewLayout());
-    assertFalse(c0c0.hasNewLayout());
-  }
+			Assert.True(c0.hasNewLayout());
+			Assert.False(c0c0.hasNewLayout());
+		}
+	}
 }

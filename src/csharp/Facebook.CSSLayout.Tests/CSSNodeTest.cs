@@ -6,45 +6,48 @@
  * LICENSE file in the root directory of this source tree. An additional grant
  * of patent rights can be found in the PATENTS file in the same directory.
  */
-package com.facebook.csslayout;
 
-import org.junit.Test;
+using System;
+using NUnit.Framework;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNull;
+namespace Facebook.CSSLayout.Tests
+{
+	/**
+	 * Tests for {@link CSSNode}.
+	 */
+	public class CSSNodeTest
+	{
 
-/**
- * Tests for {@link CSSNode}.
- */
-public class CSSNodeTest {
+		[Test]
+		public void testAddChildGetParent()
+		{
+			CSSNode parent = new CSSNode();
+			CSSNode child = new CSSNode();
 
-  @Test
-  public void testAddChildGetParent() {
-    CSSNode parent = new CSSNode();
-    CSSNode child = new CSSNode();
+			Assert.Null(child.getParent());
+			Assert.AreEqual(0, parent.getChildCount());
 
-    assertNull(child.getParent());
-    assertEquals(0, parent.getChildCount());
+			parent.addChildAt(child, 0);
 
-    parent.addChildAt(child, 0);
+			Assert.AreEqual(1, parent.getChildCount());
+			Assert.AreEqual(child, parent.getChildAt(0));
+			Assert.AreEqual(parent, child.getParent());
 
-    assertEquals(1, parent.getChildCount());
-    assertEquals(child, parent.getChildAt(0));
-    assertEquals(parent, child.getParent());
+			parent.removeChildAt(0);
 
-    parent.removeChildAt(0);
+			Assert.Null(child.getParent());
+			Assert.AreEqual(0, parent.getChildCount());
+		}
 
-    assertNull(child.getParent());
-    assertEquals(0, parent.getChildCount());
-  }
+		[Test, ExpectedException(typeof(InvalidOperationException))]
+		public void testCannotAddChildToMultipleParents()
+		{
+			CSSNode parent1 = new CSSNode();
+			CSSNode parent2 = new CSSNode();
+			CSSNode child = new CSSNode();
 
-  @Test(expected = IllegalStateException.class)
-  public void testCannotAddChildToMultipleParents() {
-    CSSNode parent1 = new CSSNode();
-    CSSNode parent2 = new CSSNode();
-    CSSNode child = new CSSNode();
-
-    parent1.addChildAt(child, 0);
-    parent2.addChildAt(child, 0);
-  }
+			parent1.addChildAt(child, 0);
+			parent2.addChildAt(child, 0);
+		}
+	}
 }

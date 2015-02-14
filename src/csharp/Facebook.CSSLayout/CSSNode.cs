@@ -44,15 +44,12 @@ namespace Facebook.CSSLayout
 		// NOT THREAD SAFE! NOT RE-ENTRANT SAFE!
 		static readonly MeasureOutput MEASURE_OUTPUT = new MeasureOutput();
 
-		public interface MeasureFunction
-		{
-			/**
-			 * Should measure the given node and put the result in the given MeasureOutput.
-			 *
-			 * NB: measure is NOT guaranteed to be threadsafe/re-entrant safe!
-			 */
-			void measure(CSSNode node, float width, MeasureOutput measureOutput);
-		}
+		/**
+		 * Should measure the given node and put the result in the given MeasureOutput.
+		 *
+		 * NB: measure is NOT guaranteed to be threadsafe/re-entrant safe!
+		 */
+		public delegate void MeasureFunction(CSSNode node, float width, MeasureOutput measureOutput);
 
 		readonly float[] mMargin = Spacing.newFullSpacingArray();
 		readonly float[] mPadding = Spacing.newFullSpacingArray();
@@ -134,7 +131,7 @@ namespace Facebook.CSSLayout
 			}
 			MEASURE_OUTPUT.height = CSSConstants.UNDEFINED;
 			MEASURE_OUTPUT.width = CSSConstants.UNDEFINED;
-			Assertions.assertNotNull(mMeasureFunction).measure(this, width, MEASURE_OUTPUT);
+			Assertions.assertNotNull(mMeasureFunction)(this, width, MEASURE_OUTPUT);
 			return MEASURE_OUTPUT;
 		}
 
