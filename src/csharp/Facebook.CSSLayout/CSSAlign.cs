@@ -6,12 +6,14 @@
  * LICENSE file in the root directory of this source tree. An additional grant
  * of patent rights can be found in the PATENTS file in the same directory.
  */
-package com.facebook.csslayout;
-
-public enum CSSAlign {
-  AUTO,
-  FLEX_START,
-  CENTER,
-  FLEX_END,
-  STRETCH,
+namespace Facebook.CSSLayout
+{
+	public enum CSSAlign
+	{
+		AUTO,
+		FLEX_START,
+		CENTER,
+		FLEX_END,
+		STRETCH,
+	}
 }

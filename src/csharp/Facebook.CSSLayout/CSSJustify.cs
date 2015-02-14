@@ -6,12 +6,15 @@
  * LICENSE file in the root directory of this source tree. An additional grant
  * of patent rights can be found in the PATENTS file in the same directory.
  */
-package com.facebook.csslayout;
 
-public enum CSSJustify {
-  FLEX_START,
-  CENTER,
-  FLEX_END,
-  SPACE_BETWEEN,
-  SPACE_AROUND,
+namespace Facebook.CSSLayout
+{
+	public enum CSSJustify
+	{
+		FLEX_START,
+		CENTER,
+		FLEX_END,
+		SPACE_BETWEEN,
+		SPACE_AROUND,
+	}
 }

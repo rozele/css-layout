@@ -92,7 +92,7 @@ var CSharpTranspiler = {
         .replace('node.style.measure', 'node.measure')
         .replace(/\.children\.length/g, '.getChildCount()')
         .replace(/node.children\[i\]/g, 'node.getChildAt(i)')
-        .replace(/fmaxf/g, 'Math.max')
+        .replace(/fmaxf/g, 'Math.Max')
         .replace(/\/\*\([^\/]+\*\/\n/g, '') // remove comments for other languages
         .replace(/var\/\*([^\/]+)\*\//g, '$1')
         .replace(/ === /g, ' == ')
@@ -105,8 +105,8 @@ var CSharpTranspiler = {
   transpileCConstDefs: function(cConstDefs) {
     return indent(
       cConstDefs
-        .replace(/#define\s+(\w+)\s+(\"[^\"]+\")/g, 'public static final String $1 = $2;')
-        .replace(/#define\s+(\w+)\s+(.+)/g, 'public static final float $1 = $2f;'));
+        .replace(/#define\s+(\w+)\s+(\"[^\"]+\")/g, 'public static readonly string $1 = $2;')
+        .replace(/#define\s+(\w+)\s+(.+)/g, 'public static readonly float $1 = $2f;'));
   },
 
   transpileCTestsArray: function(allTestsInC) {

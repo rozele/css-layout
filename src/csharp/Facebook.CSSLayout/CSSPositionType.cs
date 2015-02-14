@@ -6,9 +6,12 @@
  * LICENSE file in the root directory of this source tree. An additional grant
  * of patent rights can be found in the PATENTS file in the same directory.
  */
-package com.facebook.csslayout;
 
-public enum CSSPositionType {
-  RELATIVE,
-  ABSOLUTE,
+namespace Facebook.CSSLayout
+{
+	public enum CSSPositionType
+	{
+		RELATIVE,
+		ABSOLUTE,
+	}
 }

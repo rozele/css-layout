@@ -6,9 +6,11 @@
  * LICENSE file in the root directory of this source tree. An additional grant
  * of patent rights can be found in the PATENTS file in the same directory.
  */
-package com.facebook.csslayout;
-
-public enum CSSWrap {
-  NOWRAP,
-  WRAP,
+namespace Facebook.CSSLayout
+{
+	public enum CSSWrap
+	{
+		NOWRAP,
+		WRAP,
+	}
 }

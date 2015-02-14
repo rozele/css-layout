@@ -6,16 +6,22 @@
  * LICENSE file in the root directory of this source tree. An additional grant
  * of patent rights can be found in the PATENTS file in the same directory.
  */
-package com.facebook.csslayout;
 
-public class FloatUtil {
+using System;
 
-  private static final float EPSILON = .00001f;
+namespace Facebook.CSSLayout
+{
+	public static class FloatUtil 
+	{
+		const float EPSILON = .00001f;
 
-  public static boolean floatsEqual(float f1, float f2) {
-    if (Float.isNaN(f1) || Float.isNaN(f2)) {
-      return Float.isNaN(f1) && Float.isNaN(f2);
-    }
-    return Math.abs(f2 - f1) < EPSILON;
-  }
+		public static bool floatsEqual(float f1, float f2)
+		{
+			if (float.IsNaN(f1) || float.IsNaN(f2))
+			{
+				return float.IsNaN(f1) && float.IsNaN(f2);
+			}
+			return Math.Abs(f2 - f1) < EPSILON;
+		}
+	}
 }
