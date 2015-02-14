@@ -7,14 +7,14 @@
 
 FILES=src/__tests__/Layout-test.c src/Layout.c src/Layout-test-utils.c
 
+JAVA_CP:=./lib/junit4.jar:./lib/jsr305.jar:./lib/infer-annotations-1.4.jar
+JAVA_SP:=./src/java/src:./src/java/tests 
+JAVA_TEST_CP:=./lib/junit4.jar:./lib/jsr305.jar:./lib/infer-annotations-1.4.jar:./src/java/src:./src/java/tests
+
 ifeq (${OSTYPE}, cygwin)
-JAVA_CP=`cygpath -pw ./lib/junit4.jar:./lib/jsr305.jar:./lib/infer-annotations-1.4.jar`
-JAVA_SP=`cygpath -pw ./src/java/src:./src/java/tests` 
-JAVA_TEST_CP =`cygpath -pw ./lib/junit4.jar:./lib/jsr305.jar:./lib/infer-annotations-1.4.jar:./src/java/src:./src/java/tests`
-else
-JAVA_CP=./lib/junit4.jar:./lib/jsr305.jar:./lib/infer-annotations-1.4.jar
-JAVA_SP=./src/java/src:./src/java/tests 
-JAVA_TEST_CP =./lib/junit4.jar:./lib/jsr305.jar:./lib/infer-annotations-1.4.jar:./src/java/src:./src/java/tests
+JAVA_CP:=`cygpath -pw ${JAVA_CP}`
+JAVA_SP:=`cygpath -pw ${JAVA_SP}` 
+JAVA_TEST_CP:=`cygpath -pw ${JAVA_TEST_CP}`
 endif
 
 all: c c_test java java_test
