@@ -434,7 +434,7 @@ namespace Facebook.CSSLayout
 		}
 
 		public float LayoutX { get { return layout.X; } }
-		public float LayoutY { get { return layout.y; } }
+		public float LayoutY { get { return layout.Y; } }
 		public float LayoutWidth { get { return layout.Width; } }
 		public float LayoutHeight { get { return layout.Height; } }
 	}
