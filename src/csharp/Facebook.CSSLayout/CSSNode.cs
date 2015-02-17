@@ -93,6 +93,16 @@ namespace Facebook.CSSLayout
 			dirty();
 		}
 
+		public void RemoveSelf()
+		{
+			if (mParent == null)
+				return;
+			var index = mParent.IndexOf(this);
+			if (index == -1)
+				throw new InvalidOperationException("Child's parent does not contain it.");
+			mParent.RemoveChildAt(index);
+		}
+
 		public CSSNode Parent
 		{
 			[return: Nullable]
