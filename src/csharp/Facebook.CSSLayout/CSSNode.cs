@@ -158,9 +158,12 @@ namespace Facebook.CSSLayout
 	   * See {@link LayoutState#DIRTY}.
 	   */
 
-		internal bool isDirty()
+		public bool IsDirty
 		{
-			return mLayoutState == LayoutState.DIRTY;
+			get
+			{
+				return mLayoutState == LayoutState.DIRTY;
+			}
 		}
 
 		/**
@@ -484,6 +487,11 @@ namespace Facebook.CSSLayout
 		public static void calculateLayout(this CSSNode node)
 		{
 			node.CalculateLayout();
+		}
+
+		public static bool isDirty(this CSSNode node)
+		{
+			return node.IsDirty;
 		}
 	}
 }
