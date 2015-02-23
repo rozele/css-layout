@@ -38,7 +38,10 @@ function __transpileToCSharpCommon(code) {
         'setLayoutDimension($1, $2, $3);')
     .replace(/(\w+)\.layout\[(getDim\([^\]]+\))\]/g, 'getLayoutDimension($1, $2)')
     .replace(/(\w+)\.style\[((?:getLeading|getPos)\([^\]]+\))\]/g, 'getStylePosition($1, $2)')
-    .replace(/(\w+)\.style\[(getDim\([^\]]+\))\]/g, 'getStyleDimension($1, $2)');
+    .replace(/(\w+)\.style\[(getDim\([^\]]+\))\]/g, 'getStyleDimension($1, $2)')
+
+    .replace(/for\ \(i = /g, 'for (int i = ')
+    .replace(/var\/\*int\*\/ i;/g, '//    int i;');
 }
 
 function __transpileSingleTestToCSharp(code) {
