@@ -1,0 +1,17 @@
+<?xml version="1.0"?>
+<package >
+  <metadata>
+    <id>$id$</id>
+    <version>$version$</version>
+    <title>$title$</title>
+    <authors>$author$</authors>
+    <owners>$author$</owners>
+    <licenseUrl>https://github.com/pragmatrix/css-layout/blob/csharp/LICENSE</licenseUrl>
+    <projectUrl>https://github.com/pragmatrix/css-layout</projectUrl>
+    <requireLicenseAcceptance>false</requireLicenseAcceptance>
+    <description>$description$</description>
+    <releaseNotes>First version of the csharp port of Facebook's css-layout Java API and flexbox layouting algorithm.</releaseNotes>
+    <copyright>Copyright 2015 Facebook</copyright>
+    <tags>flexbox flex-box css layout css-layout facebook</tags>
+  </metadata>
+</package>

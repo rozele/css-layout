@@ -7,3 +7,4 @@ obj/
 _NCrunch_*/
 *.ncrunchsolution
 *.ncrunchproject
+*.nupkg
