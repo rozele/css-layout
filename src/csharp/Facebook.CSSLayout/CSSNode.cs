@@ -175,6 +175,19 @@ namespace Facebook.CSSLayout
 			get { return mLayoutState == LayoutState.HAS_NEW_LAYOUT; }
 		}
 
+		/*
+			Additional function to mark this node as dirty without requiring a derived class, thereby undermining
+			the original protection of the dirty() method. 
+		
+			Calling this function is only required when the measure function is the same, but changes its behavior.
+			For all other property changes, the node is automatically marked dirty.
+		*/
+
+		public void MarkDirty()
+		{
+			dirty();
+		}
+
 		protected void dirty()
 		{
 			if (mLayoutState == LayoutState.DIRTY)
