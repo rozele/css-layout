@@ -120,6 +120,7 @@ namespace Facebook.CSSLayout
 
 		public MeasureFunction MeasureFunction
 		{
+			get { return mMeasureFunction; }
 			set
 			{
 				if (!valuesEqual(mMeasureFunction, value))
@@ -277,6 +278,7 @@ namespace Facebook.CSSLayout
 
 		public CSSFlexDirection FlexDirection
 		{
+			get { return style.flexDirection; }
 			set
 			{
 				if (!valuesEqual(style.flexDirection, value))
@@ -289,6 +291,7 @@ namespace Facebook.CSSLayout
 
 		public CSSJustify JustifyContent
 		{
+			get { return style.justifyContent; }
 			set
 			{
 				if (!valuesEqual(style.justifyContent, value))
@@ -301,6 +304,7 @@ namespace Facebook.CSSLayout
 
 		public CSSAlign AlignItems
 		{
+			get { return style.alignItems; }
 			set
 			{
 				if (!valuesEqual(style.alignItems, value))
@@ -313,6 +317,7 @@ namespace Facebook.CSSLayout
 
 		public CSSAlign AlignSelf
 		{
+			get { return style.alignSelf; }
 			set
 			{
 				if (!valuesEqual(style.alignSelf, value))
@@ -325,6 +330,7 @@ namespace Facebook.CSSLayout
 
 		public CSSPositionType PositionType
 		{
+			get { return style.positionType; }
 			set
 			{
 				if (!valuesEqual(style.positionType, value))
@@ -337,6 +343,7 @@ namespace Facebook.CSSLayout
 
 		public CSSWrap Wrap
 		{
+			get { return style.flexWrap; }
 			set
 			{
 				if (!valuesEqual(style.flexWrap, value))
@@ -349,6 +356,7 @@ namespace Facebook.CSSLayout
 
 		public float Flex
 		{
+			get { return style.flex; }
 			set
 			{
 				if (!valuesEqual(style.flex, value))
@@ -359,9 +367,19 @@ namespace Facebook.CSSLayout
 			}
 		}
 
+		public float GetMargin(SpacingType spacingType)
+		{
+			return GetSpacing(mMargin, spacingType);
+		}
+
 		public void SetMargin(SpacingType spacingType, float margin)
 		{
 			SetSpacing(mMargin, style.margin, spacingType, margin);
+		}
+
+		public float GetPadding(SpacingType spacingType)
+		{
+			return GetSpacing(mPadding, spacingType);
 		}
 
 		public void SetPadding(SpacingType spacingType, float padding)
@@ -369,9 +387,21 @@ namespace Facebook.CSSLayout
 			SetSpacing(mPadding, style.padding, spacingType, padding);
 		}
 
+		public float GetBorder(SpacingType spacingType)
+		{
+			return GetSpacing(mBorder, spacingType);
+		}
+
 		public void SetBorder(SpacingType spacingType, float border)
 		{
 			SetSpacing(mBorder, style.border, spacingType, border);
+		}
+
+		protected float GetSpacing(
+			float[] spacingDef,
+			SpacingType spacingType)
+		{
+			return spacingDef[(int) spacingType];
 		}
 
 		protected void SetSpacing(
@@ -380,7 +410,7 @@ namespace Facebook.CSSLayout
 			SpacingType spacingType,
 			float spacing)
 		{
-			if (!valuesEqual(spacingDef[(int)spacingType], spacing))
+			if (!valuesEqual(GetSpacing(spacingDef, spacingType), spacing))
 			{
 				Spacing.updateSpacing(spacingDef, cssStyle, (int)spacingType, spacing, 0);
 				dirty();
@@ -389,6 +419,7 @@ namespace Facebook.CSSLayout
 
 		public float PositionTop
 		{
+			get { return style.positionTop; }
 			set
 			{
 				if (!valuesEqual(style.positionTop, value))
@@ -401,6 +432,7 @@ namespace Facebook.CSSLayout
 
 		public float PositionBottom
 		{
+			get { return style.positionBottom; }
 			set
 			{
 				if (!valuesEqual(style.positionBottom, value))
@@ -413,6 +445,7 @@ namespace Facebook.CSSLayout
 
 		public float PositionLeft
 		{
+			get { return style.positionLeft; }
 			set
 			{
 				if (!valuesEqual(style.positionLeft, value))
@@ -425,6 +458,7 @@ namespace Facebook.CSSLayout
 
 		public float PositionRight
 		{
+			get { return style.positionRight; }
 			set
 			{
 				if (!valuesEqual(style.positionRight, value))
@@ -437,6 +471,7 @@ namespace Facebook.CSSLayout
 
 		public float StyleWidth
 		{
+			get { return style.width; }
 			set
 			{
 				if (!valuesEqual(style.width, value))
@@ -449,6 +484,7 @@ namespace Facebook.CSSLayout
 
 		public float StyleHeight
 		{
+			get { return style.height; }
 			set
 			{
 				if (!valuesEqual(style.height, value))
