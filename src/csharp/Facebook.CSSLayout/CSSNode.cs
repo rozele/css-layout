@@ -69,6 +69,11 @@ namespace Facebook.CSSLayout
 			get { return mChildren[i]; }
 		}
 
+		public IEnumerable<CSSNode> Children
+		{
+			get { return mChildren; }
+		}
+
 		public void AddChild(CSSNode child)
 		{
 			InsertChild(ChildCount, child);
