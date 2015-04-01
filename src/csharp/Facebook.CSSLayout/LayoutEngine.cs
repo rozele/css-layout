@@ -142,7 +142,8 @@ namespace Facebook.CSSLayout
 
 		static boolean isDimDefined(CSSNode node, CSSFlexDirection axis)
 		{
-			return !CSSConstants.isUndefined(getStyleDimension(node, getDim(axis)));
+			float value = getStyleDimension(node, getDim(axis));
+			return !CSSConstants.isUndefined(value) && value > 0.0;
 		}
 
 		static boolean isPosDefined(CSSNode node, PositionIndex position)
@@ -224,6 +225,36 @@ namespace Facebook.CSSLayout
 				getLeading(axis)) + getPaddingAndBorder(node, getTrailing(axis));
 		}
 
+		static float boundAxis(CSSNode node, CSSFlexDirection axis, float value)
+		{
+			float min = CSSConstants.UNDEFINED;
+			float max = CSSConstants.UNDEFINED;
+
+			if (axis == CSSFlexDirection.COLUMN)
+			{
+				min = node.style.minHeight;
+				max = node.style.maxHeight;
+			}
+			else if (axis == CSSFlexDirection.ROW)
+			{
+				min = node.style.minWidth;
+				max = node.style.maxWidth;
+			}
+
+			float boundValue = value;
+
+			if (!CSSConstants.isUndefined(max) && max >= 0.0 && boundValue > max)
+			{
+				boundValue = max;
+			}
+			if (!CSSConstants.isUndefined(min) && min >= 0.0 && boundValue < min)
+			{
+				boundValue = min;
+			}
+
+			return boundValue;
+		}
+
 		static void setDimensionFromStyle(CSSNode node, CSSFlexDirection axis)
 		{
 			// The parent already computed us a width or height. We just skip it
@@ -239,7 +270,7 @@ namespace Facebook.CSSLayout
 
 			// The dimensions can never be smaller than the padding and border
 			float maxLayoutDimension = Math.Max(
-				getStyleDimension(node, getDim(axis)),
+				boundAxis(node, axis, getStyleDimension(node, getDim(axis))),
 				getPaddingAndBorderAxis(node, axis));
 			setLayoutDimension(node, getDim(axis), maxLayoutDimension);
 		}
@@ -382,7 +413,7 @@ namespace Facebook.CSSLayout
       // Let's not measure the text if we already know both dimensions
       if (isRowUndefined || isColumnUndefined) {
         MeasureOutput measureDim = node.measure(
-                    width
+                              width
         );
         if (isRowUndefined) {
           node.layout.width = measureDim.width +
@@ -411,9 +442,9 @@ namespace Facebook.CSSLayout
           !CSSConstants.isUndefined(getLayoutDimension(node, getDim(crossAxis))) &&
           !isDimDefined(child, crossAxis)) {
         setLayoutDimension(child, getDim(crossAxis), Math.Max(
-          getLayoutDimension(node, getDim(crossAxis)) -
+          boundAxis(child, crossAxis, getLayoutDimension(node, getDim(crossAxis)) -
             getPaddingAndBorderAxis(node, crossAxis) -
-            getMarginAxis(child, crossAxis),
+            getMarginAxis(child, crossAxis)),
           // You never want to go smaller than padding
           getPaddingAndBorderAxis(child, crossAxis)
         ));
@@ -427,11 +458,11 @@ namespace Facebook.CSSLayout
               isPosDefined(child, getLeading(axis)) &&
               isPosDefined(child, getTrailing(axis))) {
             setLayoutDimension(child, getDim(axis), Math.Max(
-              getLayoutDimension(node, getDim(axis)) -
-              getPaddingAndBorderAxis(node, axis) -
-              getMarginAxis(child, axis) -
-              getPosition(child, getLeading(axis)) -
-              getPosition(child, getTrailing(axis)),
+              boundAxis(child, axis, getLayoutDimension(node, getDim(axis)) -
+                getPaddingAndBorderAxis(node, axis) -
+                getMarginAxis(child, axis) -
+                getPosition(child, getLeading(axis)) -
+                getPosition(child, getTrailing(axis))),
               // You never want to go smaller than padding
               getPaddingAndBorderAxis(child, axis)
             ));
@@ -481,8 +512,9 @@ namespace Facebook.CSSLayout
           totalFlexible = totalFlexible + getFlex(child);
   
           // Even if we don't know its exact size yet, we already know the padding,
-          // border and margin. We'll use this partial information to compute the
-          // remaining space.
+          // border and margin. We'll use this partial information, which represents
+          // the smallest possible size for the child, to compute the remaining
+          // available space.
           nextContentDim = getPaddingAndBorderAxis(child, mainAxis) +
             getMarginAxis(child, mainAxis);
   
@@ -501,7 +533,7 @@ namespace Facebook.CSSLayout
   
           // This is the main recursive call. We layout non flexible children.
           if (alreadyComputedNextLayout == 0) {
-            layoutNode(child, maxWidth);
+            layoutNode(/*(java)!layoutContext, */child, maxWidth);
           }
   
           // Absolute positioned elements do not take part of the layout, so we
@@ -548,6 +580,26 @@ namespace Facebook.CSSLayout
       // remaining space
       if (flexibleChildrenCount != 0) {
         float flexibleMainDim = remainingMainDim / totalFlexible;
+        float baseMainDim;
+        float boundMainDim;
+  
+        // Iterate over every child in the axis. If the flex share of remaining
+        // space doesn't meet min/max bounds, remove this child from flex
+        // calculations.
+        for (int i = startLine; i < endLine; ++i) {
+          child = node.getChildAt(i);
+          if (isFlex(child)) {
+            baseMainDim = flexibleMainDim * getFlex(child) +
+                getPaddingAndBorderAxis(child, mainAxis);
+            boundMainDim = boundAxis(child, mainAxis, baseMainDim);
+  
+            if (baseMainDim != boundMainDim) {
+              remainingMainDim -= boundMainDim;
+              totalFlexible -= getFlex(child);
+            }
+          }
+        }
+        flexibleMainDim = remainingMainDim / totalFlexible;
   
         // The non flexible children can overflow the container, in this case
         // we should just assume that there is no space available.
@@ -562,8 +614,9 @@ namespace Facebook.CSSLayout
           if (isFlex(child)) {
             // At this point we know the final size of the element in the main
             // dimension
-            setLayoutDimension(child, getDim(mainAxis), flexibleMainDim * getFlex(child) +
-              getPaddingAndBorderAxis(child, mainAxis));
+            setLayoutDimension(child, getDim(mainAxis), boundAxis(child, mainAxis,
+              flexibleMainDim * getFlex(child) + getPaddingAndBorderAxis(child, mainAxis)
+            ));
   
             maxWidth = CSSConstants.UNDEFINED;
             if (isDimDefined(node, CSSFlexDirection.ROW)) {
@@ -576,7 +629,7 @@ namespace Facebook.CSSLayout
             }
   
             // And we recursively call the layout algorithm for this child
-            layoutNode(child, maxWidth);
+            layoutNode(/*(java)!layoutContext, */child, maxWidth);
           }
         }
   
@@ -640,7 +693,7 @@ namespace Facebook.CSSLayout
           mainDim = mainDim + betweenMainDim + getDimWithMargin(child, mainAxis);
           // The cross dimension is the max of the elements dimension since there
           // can only be one element in that cross dimension.
-          crossDim = Math.Max(crossDim, getDimWithMargin(child, crossAxis));
+          crossDim = Math.Max(crossDim, boundAxis(child, crossAxis, getDimWithMargin(child, crossAxis)));
         }
       }
   
@@ -651,7 +704,7 @@ namespace Facebook.CSSLayout
         containerMainAxis = Math.Max(
           // We're missing the last padding at this point to get the final
           // dimension
-          mainDim + getPaddingAndBorder(node, getTrailing(mainAxis)),
+          boundAxis(node, mainAxis, mainDim + getPaddingAndBorder(node, getTrailing(mainAxis))),
           // We can never assign a width smaller than the padding and borders
           getPaddingAndBorderAxis(node, mainAxis)
         );
@@ -663,7 +716,7 @@ namespace Facebook.CSSLayout
           // For the cross dim, we add both sides at the end because the value
           // is aggregate via a max function. Intermediate negative values
           // can mess this computation otherwise
-          crossDim + getPaddingAndBorderAxis(node, crossAxis),
+          boundAxis(node, crossAxis, crossDim + getPaddingAndBorderAxis(node, crossAxis)),
           getPaddingAndBorderAxis(node, crossAxis)
         );
       }
@@ -694,9 +747,9 @@ namespace Facebook.CSSLayout
               // previously.
               if (!isDimDefined(child, crossAxis)) {
                 setLayoutDimension(child, getDim(crossAxis), Math.Max(
-                  containerCrossAxis -
+                  boundAxis(child, crossAxis, containerCrossAxis -
                     getPaddingAndBorderAxis(node, crossAxis) -
-                    getMarginAxis(child, crossAxis),
+                    getMarginAxis(child, crossAxis)),
                   // You never want to go smaller than padding
                   getPaddingAndBorderAxis(child, crossAxis)
                 ));
@@ -732,7 +785,7 @@ namespace Facebook.CSSLayout
       setLayoutDimension(node, getDim(mainAxis), Math.Max(
         // We're missing the last padding at this point to get the final
         // dimension
-        linesMainDim + getPaddingAndBorder(node, getTrailing(mainAxis)),
+        boundAxis(node, mainAxis, linesMainDim + getPaddingAndBorder(node, getTrailing(mainAxis))),
         // We can never assign a width smaller than the padding and borders
         getPaddingAndBorderAxis(node, mainAxis)
       ));
@@ -743,7 +796,7 @@ namespace Facebook.CSSLayout
         // For the cross dim, we add both sides at the end because the value
         // is aggregate via a max function. Intermediate negative values
         // can mess this computation otherwise
-        linesCrossDim + getPaddingAndBorderAxis(node, crossAxis),
+        boundAxis(node, crossAxis, linesCrossDim + getPaddingAndBorderAxis(node, crossAxis)),
         getPaddingAndBorderAxis(node, crossAxis)
       ));
     }
@@ -762,11 +815,12 @@ namespace Facebook.CSSLayout
               isPosDefined(child, getLeading(axis)) &&
               isPosDefined(child, getTrailing(axis))) {
             setLayoutDimension(child, getDim(axis), Math.Max(
-              getLayoutDimension(node, getDim(axis)) -
-              getPaddingAndBorderAxis(node, axis) -
-              getMarginAxis(child, axis) -
-              getPosition(child, getLeading(axis)) -
-              getPosition(child, getTrailing(axis)),
+              boundAxis(child, axis, getLayoutDimension(node, getDim(axis)) -
+                getPaddingAndBorderAxis(node, axis) -
+                getMarginAxis(child, axis) -
+                getPosition(child, getLeading(axis)) -
+                getPosition(child, getTrailing(axis))
+              ),
               // You never want to go smaller than padding
               getPaddingAndBorderAxis(child, axis)
             ));

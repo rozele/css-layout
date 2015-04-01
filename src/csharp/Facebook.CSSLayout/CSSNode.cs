@@ -284,92 +284,43 @@ namespace Facebook.CSSLayout
 		public CSSFlexDirection FlexDirection
 		{
 			get { return style.flexDirection; }
-			set
-			{
-				if (!valuesEqual(style.flexDirection, value))
-				{
-					style.flexDirection = value;
-					dirty();
-				}
-			}
+			set { updateDiscreteValue(ref style.flexDirection, value); }
 		}
 
 		public CSSJustify JustifyContent
 		{
 			get { return style.justifyContent; }
-			set
-			{
-				if (!valuesEqual(style.justifyContent, value))
-				{
-					style.justifyContent = value;
-					dirty();
-				}
-			}
+			set { updateDiscreteValue(ref style.justifyContent, value); }
 		}
 
 		public CSSAlign AlignItems
 		{
 			get { return style.alignItems; }
-			set
-			{
-				if (!valuesEqual(style.alignItems, value))
-				{
-					style.alignItems = value;
-					dirty();
-				}
-			}
+			set { updateDiscreteValue(ref style.alignItems, value); }
 		}
 
 		public CSSAlign AlignSelf
 		{
 			get { return style.alignSelf; }
-			set
-			{
-				if (!valuesEqual(style.alignSelf, value))
-				{
-					style.alignSelf = value;
-					dirty();
-				}
-			}
+			set { updateDiscreteValue(ref style.alignSelf, value); }
 		}
 
 		public CSSPositionType PositionType
 		{
 			get { return style.positionType; }
-			set
-			{
-				if (!valuesEqual(style.positionType, value))
-				{
-					style.positionType = value;
-					dirty();
-				}
-			}
+			set { updateDiscreteValue(ref style.positionType, value); }
 		}
 
 		public CSSWrap Wrap
 		{
 			get { return style.flexWrap; }
-			set
-			{
-				if (!valuesEqual(style.flexWrap, value))
-				{
-					style.flexWrap = value;
-					dirty();
-				}
-			}
+			set { updateDiscreteValue(ref style.flexWrap, value); }
 		}
 
 		public float Flex
 		{
 			get { return style.flex; }
-			set
-			{
-				if (!valuesEqual(style.flex, value))
-				{
-					style.flex = value;
-					dirty();
-				}
-			}
+			set { updateFloatValue(ref style.flex, value); }
 		}
 
 		public float GetMargin(SpacingType spacingType)
@@ -425,79 +376,92 @@ namespace Facebook.CSSLayout
 		public float PositionTop
 		{
 			get { return style.positionTop; }
-			set
-			{
-				if (!valuesEqual(style.positionTop, value))
-				{
-					style.positionTop = value;
-					dirty();
-				}
-			}
+			set { updateFloatValue(ref style.positionTop, value); }
 		}
 
 		public float PositionBottom
 		{
 			get { return style.positionBottom; }
-			set
-			{
-				if (!valuesEqual(style.positionBottom, value))
-				{
-					style.positionBottom = value;
-					dirty();
-				}
-			}
+			set { updateFloatValue(ref style.positionBottom, value); }
 		}
 
 		public float PositionLeft
 		{
 			get { return style.positionLeft; }
-			set
-			{
-				if (!valuesEqual(style.positionLeft, value))
-				{
-					style.positionLeft = value;
-					dirty();
-				}
-			}
+			set { updateFloatValue(ref style.positionLeft, value); }
 		}
 
 		public float PositionRight
 		{
 			get { return style.positionRight; }
-			set
-			{
-				if (!valuesEqual(style.positionRight, value))
-				{
-					style.positionRight = value;
-					dirty();
-				}
-			}
+			set { updateFloatValue(ref style.positionRight, value); }
 		}
 
+		[Obsolete("Use Width")]
 		public float StyleWidth
 		{
-			get { return style.width; }
-			set
-			{
-				if (!valuesEqual(style.width, value))
-				{
-					style.width = value;
-					dirty();
-				}
-			}
+			get { return Width; }
+			set { Width = value; }
 		}
 
+		public float Width
+		{
+			get { return style.width; }
+			set { updateFloatValue(ref style.width, value); }
+		}
+
+		[Obsolete("Use Height")]
 		public float StyleHeight
 		{
+			get { return Height; }
+			set { Height = value; }
+		}
+
+		public float Height
+		{
 			get { return style.height; }
-			set
-			{
-				if (!valuesEqual(style.height, value))
-				{
-					style.height = value;
-					dirty();
-				}
-			}
+			set { updateFloatValue(ref style.height, value); }
+		}
+
+		public float MinWidth
+		{
+			get { return style.minWidth; }
+			set { updateFloatValue(ref style.minWidth, value); }
+		}
+
+		public float MinHeight
+		{
+			get { return style.minHeight; }
+			set { updateFloatValue(ref style.minHeight, value); }
+		}
+
+		public float MaxWidth
+		{
+			get { return style.maxWidth; }
+			set { updateFloatValue(ref style.maxWidth, value); }
+		}
+
+		public float MaxHeight
+		{
+			get { return style.maxHeight; }
+			set { updateFloatValue(ref style.maxHeight, value); }
+		}
+
+		void updateDiscreteValue<ValueT>(ref ValueT valueRef, ValueT newValue)
+		{
+			if (valuesEqual(valueRef, newValue))
+				return;
+
+			valueRef = newValue;
+			dirty();
+		}
+
+		void updateFloatValue(ref float valueRef, float newValue)
+		{
+			if (valuesEqual(valueRef, newValue))
+				return;
+			valueRef = newValue;
+			dirty();
 		}
 
 		public float LayoutX { get { return layout.X; } }

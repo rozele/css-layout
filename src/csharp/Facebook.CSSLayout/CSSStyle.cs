@@ -33,6 +33,12 @@ namespace Facebook.CSSLayout
 
 		public float width = CSSConstants.Undefined;
 		public float height = CSSConstants.Undefined;
+
+		public float minWidth = CSSConstants.Undefined;
+		public float minHeight = CSSConstants.Undefined;
+
+		public float maxWidth = CSSConstants.Undefined;
+		public float maxHeight = CSSConstants.Undefined;
 	}
 }
 
