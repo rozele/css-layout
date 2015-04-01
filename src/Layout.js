@@ -202,6 +202,27 @@ var computeLayout = (function() {
     return 0;
   }
 
+  function boundAxis(node, axis, value) {
+    var min = {
+      row: node.style.minWidth,
+      column: node.style.minHeight
+    }[axis];
+
+    var max = {
+      row: node.style.maxWidth,
+      column: node.style.maxHeight
+    }[axis];
+
+    var boundValue = value;
+    if (!isUndefined(max) && max >= 0 && boundValue > max) {
+      boundValue = max;
+    }
+    if (!isUndefined(min) && min >= 0 && boundValue < min) {
+      boundValue = min;
+    }
+    return boundValue;
+  }
+
   function fmaxf(a, b) {
     if (a > b) {
       return a;
@@ -222,7 +243,7 @@ var computeLayout = (function() {
 
     // The dimensions can never be smaller than the padding and border
     node.layout[dim[axis]] = fmaxf(
-      node.style[dim[axis]],
+      boundAxis(node, axis, node.style[dim[axis]]),
       getPaddingAndBorderAxis(node, axis)
     );
   }
@@ -278,6 +299,7 @@ var computeLayout = (function() {
       if (isRowUndefined || isColumnUndefined) {
         var/*css_dim_t*/ measureDim = node.style.measure(
           /*(c)!node->context,*/
+          /*(java)!layoutContext.measureOutput,*/
           width
         );
         if (isRowUndefined) {
@@ -307,9 +329,9 @@ var computeLayout = (function() {
           !isUndefined(node.layout[dim[crossAxis]]) &&
           !isDimDefined(child, crossAxis)) {
         child.layout[dim[crossAxis]] = fmaxf(
-          node.layout[dim[crossAxis]] -
+          boundAxis(child, crossAxis, node.layout[dim[crossAxis]] -
             getPaddingAndBorderAxis(node, crossAxis) -
-            getMarginAxis(child, crossAxis),
+            getMarginAxis(child, crossAxis)),
           // You never want to go smaller than padding
           getPaddingAndBorderAxis(child, crossAxis)
         );
@@ -323,11 +345,11 @@ var computeLayout = (function() {
               isPosDefined(child, leading[axis]) &&
               isPosDefined(child, trailing[axis])) {
             child.layout[dim[axis]] = fmaxf(
-              node.layout[dim[axis]] -
-              getPaddingAndBorderAxis(node, axis) -
-              getMarginAxis(child, axis) -
-              getPosition(child, leading[axis]) -
-              getPosition(child, trailing[axis]),
+              boundAxis(child, axis, node.layout[dim[axis]] -
+                getPaddingAndBorderAxis(node, axis) -
+                getMarginAxis(child, axis) -
+                getPosition(child, leading[axis]) -
+                getPosition(child, trailing[axis])),
               // You never want to go smaller than padding
               getPaddingAndBorderAxis(child, axis)
             );
@@ -377,8 +399,9 @@ var computeLayout = (function() {
           totalFlexible += getFlex(child);
 
           // Even if we don't know its exact size yet, we already know the padding,
-          // border and margin. We'll use this partial information to compute the
-          // remaining space.
+          // border and margin. We'll use this partial information, which represents
+          // the smallest possible size for the child, to compute the remaining
+          // available space.
           nextContentDim = getPaddingAndBorderAxis(child, mainAxis) +
             getMarginAxis(child, mainAxis);
 
@@ -397,7 +420,7 @@ var computeLayout = (function() {
 
           // This is the main recursive call. We layout non flexible children.
           if (alreadyComputedNextLayout === 0) {
-            layoutNode(child, maxWidth);
+            layoutNode(/*(java)!layoutContext, */child, maxWidth);
           }
 
           // Absolute positioned elements do not take part of the layout, so we
@@ -444,6 +467,26 @@ var computeLayout = (function() {
       // remaining space
       if (flexibleChildrenCount !== 0) {
         var/*float*/ flexibleMainDim = remainingMainDim / totalFlexible;
+        var/*float*/ baseMainDim;
+        var/*float*/ boundMainDim;
+
+        // Iterate over every child in the axis. If the flex share of remaining
+        // space doesn't meet min/max bounds, remove this child from flex
+        // calculations.
+        for (i = startLine; i < endLine; ++i) {
+          child = node.children[i];
+          if (isFlex(child)) {
+            baseMainDim = flexibleMainDim * getFlex(child) +
+                getPaddingAndBorderAxis(child, mainAxis);
+            boundMainDim = boundAxis(child, mainAxis, baseMainDim);
+
+            if (baseMainDim !== boundMainDim) {
+              remainingMainDim -= boundMainDim;
+              totalFlexible -= getFlex(child);
+            }
+          }
+        }
+        flexibleMainDim = remainingMainDim / totalFlexible;
 
         // The non flexible children can overflow the container, in this case
         // we should just assume that there is no space available.
@@ -458,8 +501,9 @@ var computeLayout = (function() {
           if (isFlex(child)) {
             // At this point we know the final size of the element in the main
             // dimension
-            child.layout[dim[mainAxis]] = flexibleMainDim * getFlex(child) +
-              getPaddingAndBorderAxis(child, mainAxis);
+            child.layout[dim[mainAxis]] = boundAxis(child, mainAxis,
+              flexibleMainDim * getFlex(child) + getPaddingAndBorderAxis(child, mainAxis)
+            );
 
             maxWidth = CSS_UNDEFINED;
             if (isDimDefined(node, CSS_FLEX_DIRECTION_ROW)) {
@@ -472,7 +516,7 @@ var computeLayout = (function() {
             }
 
             // And we recursively call the layout algorithm for this child
-            layoutNode(child, maxWidth);
+            layoutNode(/*(java)!layoutContext, */child, maxWidth);
           }
         }
 
@@ -536,7 +580,7 @@ var computeLayout = (function() {
           mainDim += betweenMainDim + getDimWithMargin(child, mainAxis);
           // The cross dimension is the max of the elements dimension since there
           // can only be one element in that cross dimension.
-          crossDim = fmaxf(crossDim, getDimWithMargin(child, crossAxis));
+          crossDim = fmaxf(crossDim, boundAxis(child, crossAxis, getDimWithMargin(child, crossAxis)));
         }
       }
 
@@ -547,7 +591,7 @@ var computeLayout = (function() {
         containerMainAxis = fmaxf(
           // We're missing the last padding at this point to get the final
           // dimension
-          mainDim + getPaddingAndBorder(node, trailing[mainAxis]),
+          boundAxis(node, mainAxis, mainDim + getPaddingAndBorder(node, trailing[mainAxis])),
           // We can never assign a width smaller than the padding and borders
           getPaddingAndBorderAxis(node, mainAxis)
         );
@@ -559,7 +603,7 @@ var computeLayout = (function() {
           // For the cross dim, we add both sides at the end because the value
           // is aggregate via a max function. Intermediate negative values
           // can mess this computation otherwise
-          crossDim + getPaddingAndBorderAxis(node, crossAxis),
+          boundAxis(node, crossAxis, crossDim + getPaddingAndBorderAxis(node, crossAxis)),
           getPaddingAndBorderAxis(node, crossAxis)
         );
       }
@@ -590,9 +634,9 @@ var computeLayout = (function() {
               // previously.
               if (!isDimDefined(child, crossAxis)) {
                 child.layout[dim[crossAxis]] = fmaxf(
-                  containerCrossAxis -
+                  boundAxis(child, crossAxis, containerCrossAxis -
                     getPaddingAndBorderAxis(node, crossAxis) -
-                    getMarginAxis(child, crossAxis),
+                    getMarginAxis(child, crossAxis)),
                   // You never want to go smaller than padding
                   getPaddingAndBorderAxis(child, crossAxis)
                 );
@@ -628,7 +672,7 @@ var computeLayout = (function() {
       node.layout[dim[mainAxis]] = fmaxf(
         // We're missing the last padding at this point to get the final
         // dimension
-        linesMainDim + getPaddingAndBorder(node, trailing[mainAxis]),
+        boundAxis(node, mainAxis, linesMainDim + getPaddingAndBorder(node, trailing[mainAxis])),
         // We can never assign a width smaller than the padding and borders
         getPaddingAndBorderAxis(node, mainAxis)
       );
@@ -639,7 +683,7 @@ var computeLayout = (function() {
         // For the cross dim, we add both sides at the end because the value
         // is aggregate via a max function. Intermediate negative values
         // can mess this computation otherwise
-        linesCrossDim + getPaddingAndBorderAxis(node, crossAxis),
+        boundAxis(node, crossAxis, linesCrossDim + getPaddingAndBorderAxis(node, crossAxis)),
         getPaddingAndBorderAxis(node, crossAxis)
       );
     }
@@ -658,11 +702,12 @@ var computeLayout = (function() {
               isPosDefined(child, leading[axis]) &&
               isPosDefined(child, trailing[axis])) {
             child.layout[dim[axis]] = fmaxf(
-              node.layout[dim[axis]] -
-              getPaddingAndBorderAxis(node, axis) -
-              getMarginAxis(child, axis) -
-              getPosition(child, leading[axis]) -
-              getPosition(child, trailing[axis]),
+              boundAxis(child, axis, node.layout[dim[axis]] -
+                getPaddingAndBorderAxis(node, axis) -
+                getMarginAxis(child, axis) -
+                getPosition(child, leading[axis]) -
+                getPosition(child, trailing[axis])
+              ),
               // You never want to go smaller than padding
               getPaddingAndBorderAxis(child, axis)
             );

@@ -26,6 +26,7 @@ function __transpileToJavaCommon(code) {
     .replace(/pos\[([^\]]+)\]/g, 'getPos($1)')
     .replace(/dim\[([^\]]+)\]/g, 'getDim($1)')
     .replace(/isUndefined/g, 'CSSConstants.isUndefined')
+    .replace(/\/\*\(java\)!([^*]+)\*\//g, '$1')
 
     // Since Java doesn't store its attributes in arrays, we need to use setters/getters to access
     // the appropriate layout/style fields
@@ -48,6 +49,16 @@ function __transpileSingleTestToJava(code) {
         /(style|layout)\.dimensions\[CSS_(WIDTH|HEIGHT)\]/g,
         function (str, match1, match2) {
             return match1 + '.' + match2.toLowerCase();
+        })
+    .replace( // style.maxDimensions[CSS_WIDTH] => style.maxWidth
+        /(style|layout)\.maxDimensions\[CSS_(WIDTH|HEIGHT)\]/g,
+        function (str, match1, match2) {
+            return match1 + '.max' + match2.substr(0, 1).toUpperCase() + match2.substr(1).toLowerCase();
+        })
+    .replace( // style.minDimensions[CSS_WIDTH] => style.minWidth
+        /(style|layout)\.minDimensions\[CSS_(WIDTH|HEIGHT)\]/g,
+        function (str, match1, match2) {
+            return match1 + '.min' + match2.substr(0, 1).toUpperCase() + match2.substr(1).toLowerCase();
         })
     .replace( // layout.position[CSS_TOP] => layout.y
         /layout\.position\[CSS_(TOP|LEFT)\]/g,
