@@ -333,6 +333,11 @@ namespace Facebook.CSSLayout
 			SetSpacing(mMargin, style.margin, spacingType, margin);
 		}
 
+		public float GetEffectiveMargin(SpacingType spacingType)
+		{
+			return GetSpacing(style.margin, spacingType);
+		}
+
 		public float GetPadding(SpacingType spacingType)
 		{
 			return GetSpacing(mPadding, spacingType);
@@ -343,6 +348,11 @@ namespace Facebook.CSSLayout
 			SetSpacing(mPadding, style.padding, spacingType, padding);
 		}
 
+		public float GetEffectivePadding(SpacingType spacingType)
+		{
+			return GetSpacing(style.padding, spacingType);
+		}
+
 		public float GetBorder(SpacingType spacingType)
 		{
 			return GetSpacing(mBorder, spacingType);
@@ -351,6 +361,11 @@ namespace Facebook.CSSLayout
 		public void SetBorder(SpacingType spacingType, float border)
 		{
 			SetSpacing(mBorder, style.border, spacingType, border);
+		}
+
+		public void GetEffectiveBorder(SpacingType spacingType)
+		{
+			GetSpacing(style.border, spacingType);
 		}
 
 		protected float GetSpacing(
