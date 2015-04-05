@@ -2,7 +2,7 @@ MSB=msbuild.exe /m /verbosity:m /nologo
 NUGET=nuget.exe
 NUNITC=nunit-console.exe
 
-VER=0.6.0.0
+VER=0.7.0.0
 NAME=Facebook.CSSLayout
 
 .PHONY: all
