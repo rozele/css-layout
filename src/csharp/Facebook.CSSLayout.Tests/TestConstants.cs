@@ -16,10 +16,10 @@ namespace Facebook.CSSLayout.Tests
 
 	  /** START_GENERATED **/
   public static readonly float SMALL_WIDTH = 34.671875f;
-  public static readonly float SMALL_HEIGHT = 16f;
+  public static readonly float SMALL_HEIGHT = 18f;
   public static readonly float BIG_WIDTH = 172.421875f;
-  public static readonly float BIG_HEIGHT = 32f;
-  public static readonly float BIG_MIN_WIDTH = 100.453125f;
+  public static readonly float BIG_HEIGHT = 36f;
+  public static readonly float BIG_MIN_WIDTH = 100.4375f;
   public static readonly string SMALL_TEXT = "small";
   public static readonly string LONG_TEXT = "loooooooooong with space";
   /** END_GENERATED **/

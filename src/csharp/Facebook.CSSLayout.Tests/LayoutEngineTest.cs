@@ -2690,7 +2690,7 @@ public class LayoutEngineTest
       node_0.layout.y = 0;
       node_0.layout.x = 0;
       node_0.layout.width = 34.671875f;
-      node_0.layout.height = 16;
+      node_0.layout.height = 18;
     }
 
     test("should layout node with just text", root_node, root_layout);
@@ -2713,7 +2713,7 @@ public class LayoutEngineTest
       node_0.layout.y = 0;
       node_0.layout.x = 0;
       node_0.layout.width = 10;
-      node_0.layout.height = 16;
+      node_0.layout.height = 18;
     }
 
     test("should layout node with text and width", root_node, root_layout);
@@ -2735,7 +2735,7 @@ public class LayoutEngineTest
       node_0.layout.y = 0;
       node_0.layout.x = 0;
       node_0.layout.width = 172.421875f;
-      node_0.layout.height = 16;
+      node_0.layout.height = 18;
     }
 
     test("should layout node with text, padding and margin", root_node, root_layout);
@@ -2821,7 +2821,7 @@ public class LayoutEngineTest
       node_0.layout.y = 0;
       node_0.layout.x = 0;
       node_0.layout.width = 500;
-      node_0.layout.height = 16;
+      node_0.layout.height = 18;
       addChildren(node_0, 1);
       {
         TestCSSNode node_1;
@@ -2829,7 +2829,7 @@ public class LayoutEngineTest
         node_1.layout.y = 0;
         node_1.layout.x = 0;
         node_1.layout.width = 500;
-        node_1.layout.height = 16;
+        node_1.layout.height = 18;
         addChildren(node_1, 1);
         {
           TestCSSNode node_2;
@@ -2837,7 +2837,7 @@ public class LayoutEngineTest
           node_2.layout.y = 0;
           node_2.layout.x = 0;
           node_2.layout.width = 500;
-          node_2.layout.height = 16;
+          node_2.layout.height = 18;
         }
       }
     }
@@ -2874,7 +2874,7 @@ public class LayoutEngineTest
       node_0.layout.y = 0;
       node_0.layout.x = 0;
       node_0.layout.width = 130;
-      node_0.layout.height = 32;
+      node_0.layout.height = 36;
       addChildren(node_0, 1);
       {
         TestCSSNode node_1;
@@ -2882,7 +2882,7 @@ public class LayoutEngineTest
         node_1.layout.y = 0;
         node_1.layout.x = 0;
         node_1.layout.width = 130;
-        node_1.layout.height = 32;
+        node_1.layout.height = 36;
         addChildren(node_1, 1);
         {
           TestCSSNode node_2;
@@ -2890,7 +2890,7 @@ public class LayoutEngineTest
           node_2.layout.y = 0;
           node_2.layout.x = 0;
           node_2.layout.width = 130;
-          node_2.layout.height = 32;
+          node_2.layout.height = 36;
         }
       }
     }
@@ -2928,7 +2928,7 @@ public class LayoutEngineTest
       node_0.layout.y = 0;
       node_0.layout.x = 0;
       node_0.layout.width = 200;
-      node_0.layout.height = 32;
+      node_0.layout.height = 36;
       addChildren(node_0, 1);
       {
         TestCSSNode node_1;
@@ -2936,7 +2936,7 @@ public class LayoutEngineTest
         node_1.layout.y = 0;
         node_1.layout.x = 0;
         node_1.layout.width = 200;
-        node_1.layout.height = 32;
+        node_1.layout.height = 36;
         addChildren(node_1, 1);
         {
           TestCSSNode node_2;
@@ -2944,7 +2944,7 @@ public class LayoutEngineTest
           node_2.layout.y = 0;
           node_2.layout.x = 0;
           node_2.layout.width = 130;
-          node_2.layout.height = 32;
+          node_2.layout.height = 36;
         }
       }
     }
@@ -2976,15 +2976,15 @@ public class LayoutEngineTest
       node_0.layout.y = 0;
       node_0.layout.x = 0;
       node_0.layout.width = 100;
-      node_0.layout.height = 32;
+      node_0.layout.height = 36;
       addChildren(node_0, 1);
       {
         TestCSSNode node_1;
         node_1 = node_0.getChildAt(0);
         node_1.layout.y = 0;
         node_1.layout.x = 0;
-        node_1.layout.width = 100.453125f;
-        node_1.layout.height = 32;
+        node_1.layout.width = 100.4375f;
+        node_1.layout.height = 36;
       }
     }
 
@@ -3028,23 +3028,23 @@ public class LayoutEngineTest
       node_0.layout.y = 0;
       node_0.layout.x = 0;
       node_0.layout.width = 100;
-      node_0.layout.height = 72;
+      node_0.layout.height = 76;
       addChildren(node_0, 1);
       {
         TestCSSNode node_1;
         node_1 = node_0.getChildAt(0);
         node_1.layout.y = 20;
         node_1.layout.x = 20;
-        node_1.layout.width = 100.453125f;
-        node_1.layout.height = 32;
+        node_1.layout.width = 100.4375f;
+        node_1.layout.height = 36;
         addChildren(node_1, 1);
         {
           TestCSSNode node_2;
           node_2 = node_1.getChildAt(0);
           node_2.layout.y = 0;
           node_2.layout.x = 0;
-          node_2.layout.width = 100.453125f;
-          node_2.layout.height = 32;
+          node_2.layout.width = 100.4375f;
+          node_2.layout.height = 36;
         }
       }
     }
@@ -3165,7 +3165,7 @@ public class LayoutEngineTest
       node_0.layout.y = 0;
       node_0.layout.x = 0;
       node_0.layout.width = 200;
-      node_0.layout.height = 56;
+      node_0.layout.height = 58;
       addChildren(node_0, 1);
       {
         TestCSSNode node_1;
@@ -3173,7 +3173,7 @@ public class LayoutEngineTest
         node_1.layout.y = 0;
         node_1.layout.x = 0;
         node_1.layout.width = 200;
-        node_1.layout.height = 56;
+        node_1.layout.height = 58;
         addChildren(node_1, 1);
         {
           TestCSSNode node_2;
@@ -3181,7 +3181,7 @@ public class LayoutEngineTest
           node_2.layout.y = 20;
           node_2.layout.x = 20;
           node_2.layout.width = 172.421875f;
-          node_2.layout.height = 16;
+          node_2.layout.height = 18;
         }
       }
     }
@@ -3220,7 +3220,7 @@ public class LayoutEngineTest
       node_0.layout.y = 0;
       node_0.layout.x = 0;
       node_0.layout.width = 200;
-      node_0.layout.height = 72;
+      node_0.layout.height = 76;
       addChildren(node_0, 1);
       {
         TestCSSNode node_1;
@@ -3228,7 +3228,7 @@ public class LayoutEngineTest
         node_1.layout.y = 0;
         node_1.layout.x = 0;
         node_1.layout.width = 200;
-        node_1.layout.height = 72;
+        node_1.layout.height = 76;
         addChildren(node_1, 1);
         {
           TestCSSNode node_2;
@@ -3236,7 +3236,7 @@ public class LayoutEngineTest
           node_2.layout.y = 20;
           node_2.layout.x = 20;
           node_2.layout.width = 160;
-          node_2.layout.height = 32;
+          node_2.layout.height = 36;
         }
       }
     }
@@ -5075,6 +5075,198 @@ public class LayoutEngineTest
     }
 
     test("should layout minHeight without a flex child", root_node, root_layout);
+  }
+
+  [Test]
+  public void testCase122()
+  {
+    TestCSSNode root_node = new TestCSSNode();
+    {
+      TestCSSNode node_0 = root_node;
+      node_0.style.width = 400;
+      node_0.style.height = 400;
+      addChildren(node_0, 1);
+      {
+        TestCSSNode node_1;
+        node_1 = node_0.getChildAt(0);
+        node_1.style.positionType = CSSPositionType.ABSOLUTE;
+        node_1.style.padding[Spacing.LEFT] = 10;
+        node_1.style.padding[Spacing.TOP] = 10;
+        node_1.style.padding[Spacing.RIGHT] = 10;
+        node_1.style.padding[Spacing.BOTTOM] = 10;
+        node_1.style.positionLeft = 100;
+        node_1.style.positionTop = 100;
+        node_1.style.positionRight = 100;
+        node_1.style.positionBottom = 100;
+        addChildren(node_1, 1);
+        {
+          TestCSSNode node_2;
+          node_2 = node_1.getChildAt(0);
+          node_2.style.positionType = CSSPositionType.ABSOLUTE;
+          node_2.style.positionLeft = 10;
+          node_2.style.positionTop = 10;
+          node_2.style.positionRight = 10;
+          node_2.style.positionBottom = 10;
+        }
+      }
+    }
+
+    TestCSSNode root_layout = new TestCSSNode();
+    {
+      TestCSSNode node_0 = root_layout;
+      node_0.layout.y = 0;
+      node_0.layout.x = 0;
+      node_0.layout.width = 400;
+      node_0.layout.height = 400;
+      addChildren(node_0, 1);
+      {
+        TestCSSNode node_1;
+        node_1 = node_0.getChildAt(0);
+        node_1.layout.y = 100;
+        node_1.layout.x = 100;
+        node_1.layout.width = 200;
+        node_1.layout.height = 200;
+        addChildren(node_1, 1);
+        {
+          TestCSSNode node_2;
+          node_2 = node_1.getChildAt(0);
+          node_2.layout.y = 10;
+          node_2.layout.x = 10;
+          node_2.layout.width = 180;
+          node_2.layout.height = 180;
+        }
+      }
+    }
+
+    test("should layout absolutely positioned node with absolutely positioned padded parent", root_node, root_layout);
+  }
+
+  [Test]
+  public void testCase123()
+  {
+    TestCSSNode root_node = new TestCSSNode();
+    {
+      TestCSSNode node_0 = root_node;
+      node_0.style.width = 400;
+      node_0.style.height = 400;
+      addChildren(node_0, 1);
+      {
+        TestCSSNode node_1;
+        node_1 = node_0.getChildAt(0);
+        node_1.style.positionType = CSSPositionType.ABSOLUTE;
+        node_1.style.padding[Spacing.LEFT] = 10;
+        node_1.style.padding[Spacing.TOP] = 10;
+        node_1.style.padding[Spacing.RIGHT] = 10;
+        node_1.style.padding[Spacing.BOTTOM] = 10;
+        node_1.style.border[Spacing.LEFT] = 1;
+        node_1.style.border[Spacing.TOP] = 1;
+        node_1.style.border[Spacing.RIGHT] = 1;
+        node_1.style.border[Spacing.BOTTOM] = 1;
+        node_1.style.positionLeft = 100;
+        node_1.style.positionTop = 100;
+        node_1.style.positionRight = 100;
+        node_1.style.positionBottom = 100;
+        addChildren(node_1, 1);
+        {
+          TestCSSNode node_2;
+          node_2 = node_1.getChildAt(0);
+          node_2.style.positionType = CSSPositionType.ABSOLUTE;
+          node_2.style.positionLeft = 10;
+          node_2.style.positionTop = 10;
+          node_2.style.positionRight = 10;
+          node_2.style.positionBottom = 10;
+        }
+      }
+    }
+
+    TestCSSNode root_layout = new TestCSSNode();
+    {
+      TestCSSNode node_0 = root_layout;
+      node_0.layout.y = 0;
+      node_0.layout.x = 0;
+      node_0.layout.width = 400;
+      node_0.layout.height = 400;
+      addChildren(node_0, 1);
+      {
+        TestCSSNode node_1;
+        node_1 = node_0.getChildAt(0);
+        node_1.layout.y = 100;
+        node_1.layout.x = 100;
+        node_1.layout.width = 200;
+        node_1.layout.height = 200;
+        addChildren(node_1, 1);
+        {
+          TestCSSNode node_2;
+          node_2 = node_1.getChildAt(0);
+          node_2.layout.y = 11;
+          node_2.layout.x = 11;
+          node_2.layout.width = 178;
+          node_2.layout.height = 178;
+        }
+      }
+    }
+
+    test("should layout absolutely positioned node with absolutely positioned padded and bordered parent", root_node, root_layout);
+  }
+
+  [Test]
+  public void testCase124()
+  {
+    TestCSSNode root_node = new TestCSSNode();
+    {
+      TestCSSNode node_0 = root_node;
+      node_0.style.width = 400;
+      node_0.style.height = 400;
+      addChildren(node_0, 1);
+      {
+        TestCSSNode node_1;
+        node_1 = node_0.getChildAt(0);
+        node_1.style.flex = 1;
+        node_1.style.padding[Spacing.LEFT] = 10;
+        node_1.style.padding[Spacing.TOP] = 10;
+        node_1.style.padding[Spacing.RIGHT] = 10;
+        node_1.style.padding[Spacing.BOTTOM] = 10;
+        addChildren(node_1, 1);
+        {
+          TestCSSNode node_2;
+          node_2 = node_1.getChildAt(0);
+          node_2.style.positionType = CSSPositionType.ABSOLUTE;
+          node_2.style.positionLeft = 10;
+          node_2.style.positionTop = 10;
+          node_2.style.positionRight = 10;
+          node_2.style.positionBottom = 10;
+        }
+      }
+    }
+
+    TestCSSNode root_layout = new TestCSSNode();
+    {
+      TestCSSNode node_0 = root_layout;
+      node_0.layout.y = 0;
+      node_0.layout.x = 0;
+      node_0.layout.width = 400;
+      node_0.layout.height = 400;
+      addChildren(node_0, 1);
+      {
+        TestCSSNode node_1;
+        node_1 = node_0.getChildAt(0);
+        node_1.layout.y = 0;
+        node_1.layout.x = 0;
+        node_1.layout.width = 400;
+        node_1.layout.height = 400;
+        addChildren(node_1, 1);
+        {
+          TestCSSNode node_2;
+          node_2 = node_1.getChildAt(0);
+          node_2.layout.y = 10;
+          node_2.layout.x = 10;
+          node_2.layout.width = 380;
+          node_2.layout.height = 380;
+        }
+      }
+    }
+
+    test("should layout absolutely positioned node with padded flex 1 parent", root_node, root_layout);
   }
   /** END_GENERATED **/
 }

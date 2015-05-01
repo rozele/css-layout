@@ -225,6 +225,11 @@ namespace Facebook.CSSLayout
 				getLeading(axis)) + getPaddingAndBorder(node, getTrailing(axis));
 		}
 
+		static float getBorderAxis(CSSNode node, CSSFlexDirection axis) 
+		{
+			return getBorder(node, getLeading(axis)) + getBorder(node, getTrailing(axis));
+		}
+
 		static float boundAxis(CSSNode node, CSSFlexDirection axis, float value)
 		{
 			float min = CSSConstants.UNDEFINED;
@@ -816,7 +821,7 @@ namespace Facebook.CSSLayout
               isPosDefined(child, getTrailing(axis))) {
             setLayoutDimension(child, getDim(axis), Math.Max(
               boundAxis(child, axis, getLayoutDimension(node, getDim(axis)) -
-                getPaddingAndBorderAxis(node, axis) -
+                getBorderAxis(node, axis) -
                 getMarginAxis(child, axis) -
                 getPosition(child, getLeading(axis)) -
                 getPosition(child, getTrailing(axis))
