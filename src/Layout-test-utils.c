@@ -88,7 +88,7 @@ css_dim_t measure(void *context, float width) {
 }
 
 void test(const char *name, css_node_t *style, css_node_t *expected_layout) {
-  layoutNode(style, CSS_UNDEFINED);
+  layoutNode(style, CSS_UNDEFINED, -1);
 
   if (!are_layout_equal(style, expected_layout)) {
     printf("%sF%s", "\x1B[31m", "\x1B[0m");
@@ -109,12 +109,12 @@ int tests_finished() {
     printf("%sFAIL%s %s\n", "\x1B[31m", "\x1B[0m", failed_test->name);
 
     printf("Input:    ");
-    print_css_node(failed_test->style, CSS_PRINT_STYLE);
+    print_css_node(failed_test->style, CSS_PRINT_STYLE | CSS_PRINT_CHILDREN);
     printf("Output:   ");
-    print_css_node(failed_test->style, CSS_PRINT_LAYOUT);
+    print_css_node(failed_test->style, CSS_PRINT_LAYOUT | CSS_PRINT_CHILDREN);
 
     printf("Expected: ");
-    print_css_node(failed_test->expected, CSS_PRINT_LAYOUT);
+    print_css_node(failed_test->expected, CSS_PRINT_LAYOUT | CSS_PRINT_CHILDREN);
 
     free_css_node(failed_test->style);
     free_css_node(failed_test->expected);
