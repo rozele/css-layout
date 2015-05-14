@@ -39,13 +39,19 @@ namespace Facebook.CSSLayout
 			switch (position)
 			{
 			case PositionIndex.TOP:
-				node.layout.y = value;
+				node.layout.top = value;
 				break;
 			case PositionIndex.LEFT:
-				node.layout.x = value;
+				node.layout.left = value;
+				break;
+			case PositionIndex.RIGHT:
+				node.layout.right = value;
+				break;
+			case PositionIndex.BOTTOM:
+				node.layout.bottom = value;
 				break;
 			default:
-				throw new Exception("Didn't get TOP or LEFT!");
+				throw new Exception("Didn't get TOP, LEFT, RIGHT, or BOTTOM!");
 			}
 		}
 
@@ -54,11 +60,15 @@ namespace Facebook.CSSLayout
 			switch (position)
 			{
 			case PositionIndex.TOP:
-				return node.layout.y;
+				return node.layout.top;
 			case PositionIndex.LEFT:
-				return node.layout.x;
+				return node.layout.left;
+			case PositionIndex.RIGHT:
+				return node.layout.right;
+			case PositionIndex.BOTTOM:
+				return node.layout.bottom;
 			default:
-				throw new Exception("Didn't get TOP or LEFT!");
+				throw new Exception("Didn't get TOP, LEFT, RIGHT, or BOTTOM!");
 			}
 		}
 
@@ -122,22 +132,68 @@ namespace Facebook.CSSLayout
 
 		static PositionIndex getLeading(CSSFlexDirection axis)
 		{
-			return axis == CSSFlexDirection.COLUMN ? PositionIndex.TOP : PositionIndex.LEFT;
+			switch (axis)
+			{
+			case CSSFlexDirection.COLUMN:
+				return PositionIndex.TOP;
+			case CSSFlexDirection.COLUMN_REVERSE:
+				return PositionIndex.BOTTOM;
+			case CSSFlexDirection.ROW:
+				return PositionIndex.LEFT;
+			case CSSFlexDirection.ROW_REVERSE:
+				return PositionIndex.RIGHT;
+			default:
+				throw new Exception("Didn't get TOP, LEFT, RIGHT, or BOTTOM!");
+			}
 		}
 
 		static PositionIndex getTrailing(CSSFlexDirection axis)
 		{
-			return axis == CSSFlexDirection.COLUMN ? PositionIndex.BOTTOM : PositionIndex.RIGHT;
+			switch (axis)
+			{
+			case CSSFlexDirection.COLUMN:
+				return PositionIndex.BOTTOM;
+			case CSSFlexDirection.COLUMN_REVERSE:
+				return PositionIndex.TOP;
+			case CSSFlexDirection.ROW:
+				return PositionIndex.RIGHT;
+			case CSSFlexDirection.ROW_REVERSE:
+				return PositionIndex.LEFT;
+			default:
+				throw new Exception("Didn't get COLUMN, COLUMN_REVERSE, ROW, or ROW_REVERSE!");
+			}
 		}
 
 		static PositionIndex getPos(CSSFlexDirection axis)
 		{
-			return axis == CSSFlexDirection.COLUMN ? PositionIndex.TOP : PositionIndex.LEFT;
+			switch (axis)
+			{
+			case CSSFlexDirection.COLUMN:
+				return PositionIndex.TOP;
+			case CSSFlexDirection.COLUMN_REVERSE:
+				return PositionIndex.BOTTOM;
+			case CSSFlexDirection.ROW:
+				return PositionIndex.LEFT;
+			case CSSFlexDirection.ROW_REVERSE:
+				return PositionIndex.RIGHT;
+			default:
+				throw new Exception("Didn't get COLUMN, COLUMN_REVERSE, ROW, or ROW_REVERSE!");
+			}
 		}
 
 		static DimensionIndex getDim(CSSFlexDirection axis)
 		{
-			return axis == CSSFlexDirection.COLUMN ? DimensionIndex.HEIGHT : DimensionIndex.WIDTH;
+			switch (axis)
+			{
+			case CSSFlexDirection.COLUMN:
+			case CSSFlexDirection.COLUMN_REVERSE:
+				return DimensionIndex.HEIGHT;
+			case CSSFlexDirection.ROW:
+			case CSSFlexDirection.ROW_REVERSE:
+				return DimensionIndex.WIDTH;
+			default:
+				throw new Exception("Didn't get COLUMN, COLUMN_REVERSE, ROW, or ROW_REVERSE!");
+			}
 		}
 
 		static boolean isDimDefined(CSSNode node, CSSFlexDirection axis)
@@ -235,12 +291,12 @@ namespace Facebook.CSSLayout
 			float min = CSSConstants.UNDEFINED;
 			float max = CSSConstants.UNDEFINED;
 
-			if (axis == CSSFlexDirection.COLUMN)
+			if (isColumnDirection(axis))
 			{
 				min = node.style.minHeight;
 				max = node.style.maxHeight;
 			}
-			else if (axis == CSSFlexDirection.ROW)
+			else if (isRowDirection(axis))
 			{
 				min = node.style.minWidth;
 				max = node.style.maxWidth;
@@ -280,6 +336,19 @@ namespace Facebook.CSSLayout
 			setLayoutDimension(node, getDim(axis), maxLayoutDimension);
 		}
 
+		static void setTrailingPosition(
+			CSSNode node,
+			CSSNode child,
+			CSSFlexDirection axis)
+		{
+			setLayoutPosition(
+				child,
+				getTrailing(axis),
+				getLayoutDimension(node, getDim(axis)) -
+				getLayoutDimension(child, getDim(axis)) -
+				getLayoutPosition(child, getPos(axis)));
+		}
+
 		static float getRelativePosition(CSSNode node, CSSFlexDirection axis)
 		{
 			float lead = getStylePosition(node, getLeading(axis));
@@ -295,9 +364,65 @@ namespace Facebook.CSSLayout
 			return node.style.flex;
 		}
 
+		static boolean isRowDirection(CSSFlexDirection flexDirection)
+		{
+			return flexDirection == CSSFlexDirection.ROW ||
+					flexDirection == CSSFlexDirection.ROW_REVERSE;
+		}
+
+		static boolean isColumnDirection(CSSFlexDirection flexDirection)
+		{
+			return flexDirection == CSSFlexDirection.COLUMN ||
+					flexDirection == CSSFlexDirection.COLUMN_REVERSE;
+		}
+
+		static CSSFlexDirection resolveAxis(
+			CSSFlexDirection axis,
+			CSSDirection direction)
+		{
+			if (direction == CSSDirection.RTL)
+			{
+				if (axis == CSSFlexDirection.ROW)
+				{
+					return CSSFlexDirection.ROW_REVERSE;
+				}
+				else if (axis == CSSFlexDirection.ROW_REVERSE)
+				{
+					return CSSFlexDirection.ROW;
+				}
+			}
+
+			return axis;
+		}
+
+		static CSSDirection resolveDirection(CSSNode node, CSSDirection? parentDirection)
+		{
+			CSSDirection direction = node.style.direction;
+			if (direction == CSSDirection.INHERIT)
+			{
+				direction = (parentDirection == null ? CSSDirection.LTR : parentDirection.Value);
+			}
+
+			return direction;
+		}
+
 		static CSSFlexDirection getFlexDirection(CSSNode node)
 		{
 			return node.style.flexDirection;
+		}
+
+		static CSSFlexDirection getCrossFlexDirection(
+			CSSFlexDirection flexDirection,
+			CSSDirection direction)
+		{
+			if (isColumnDirection(flexDirection))
+			{
+				return resolveAxis(CSSFlexDirection.ROW, direction);
+			}
+			else
+			{
+				return CSSFlexDirection.COLUMN;
+			}
 		}
 
 		static CSSPositionType getPositionType(CSSNode node)
@@ -349,7 +474,7 @@ namespace Facebook.CSSLayout
 					!FloatUtil.floatsEqual(node.lastLayout.parentMaxWidth, parentMaxWidth);
 		}
 
-		internal static void layoutNode(CSSNode node, float parentMaxWidth)
+		internal static void layoutNode(CSSNode node, float parentMaxWidth, CSSDirection? parentDirection)
 		{
 			if (needsRelayout(node, parentMaxWidth))
 			{
@@ -357,7 +482,7 @@ namespace Facebook.CSSLayout
 				node.lastLayout.requestedHeight = node.layout.Height;
 				node.lastLayout.parentMaxWidth = parentMaxWidth;
 
-				layoutNodeImpl(node, parentMaxWidth);
+				layoutNodeImpl(node, parentMaxWidth, parentDirection);
 				node.lastLayout.copy(node.layout);
 			}
 			else
@@ -368,7 +493,7 @@ namespace Facebook.CSSLayout
 			node.markHasNewLayout();
 		}
 
-		static void layoutNodeImpl(CSSNode node, float parentMaxWidth)
+		static void layoutNodeImpl(CSSNode node, float parentMaxWidth, CSSDirection? parentDirection)
 		{
 
 			for (int i = 0; i < node.getChildCount(); i++)
@@ -378,11 +503,10 @@ namespace Facebook.CSSLayout
 
 			/** START_GENERATED **/
   
-  
-    CSSFlexDirection mainAxis = getFlexDirection(node);
-    CSSFlexDirection crossAxis = mainAxis == CSSFlexDirection.ROW ?
-      CSSFlexDirection.COLUMN :
-      CSSFlexDirection.ROW;
+    CSSDirection direction = resolveDirection(node, parentDirection);
+    CSSFlexDirection mainAxis = resolveAxis(getFlexDirection(node), direction);
+    CSSFlexDirection crossAxis = getCrossFlexDirection(mainAxis, direction);
+    CSSFlexDirection resolvedRowAxis = resolveAxis(CSSFlexDirection.ROW, direction);
   
     // Handle width and height style attributes
     setDimensionFromStyle(node, mainAxis);
@@ -392,26 +516,30 @@ namespace Facebook.CSSLayout
     // delta composed of the margin and left/top/right/bottom
     setLayoutPosition(node, getLeading(mainAxis), getLayoutPosition(node, getLeading(mainAxis)) + getMargin(node, getLeading(mainAxis)) +
       getRelativePosition(node, mainAxis));
+    setLayoutPosition(node, getTrailing(mainAxis), getLayoutPosition(node, getTrailing(mainAxis)) + getMargin(node, getTrailing(mainAxis)) +
+      getRelativePosition(node, mainAxis));
     setLayoutPosition(node, getLeading(crossAxis), getLayoutPosition(node, getLeading(crossAxis)) + getMargin(node, getLeading(crossAxis)) +
+      getRelativePosition(node, crossAxis));
+    setLayoutPosition(node, getTrailing(crossAxis), getLayoutPosition(node, getTrailing(crossAxis)) + getMargin(node, getTrailing(crossAxis)) +
       getRelativePosition(node, crossAxis));
   
     if (isMeasureDefined(node)) {
       float width = CSSConstants.UNDEFINED;
-      if (isDimDefined(node, CSSFlexDirection.ROW)) {
+      if (isDimDefined(node, resolvedRowAxis)) {
         width = node.style.width;
-      } else if (!CSSConstants.isUndefined(getLayoutDimension(node, getDim(CSSFlexDirection.ROW)))) {
-        width = getLayoutDimension(node, getDim(CSSFlexDirection.ROW));
+      } else if (!CSSConstants.isUndefined(getLayoutDimension(node, getDim(resolvedRowAxis)))) {
+        width = getLayoutDimension(node, getDim(resolvedRowAxis));
       } else {
         width = parentMaxWidth -
-          getMarginAxis(node, CSSFlexDirection.ROW);
+          getMarginAxis(node, resolvedRowAxis);
       }
-      width -= getPaddingAndBorderAxis(node, CSSFlexDirection.ROW);
+      width -= getPaddingAndBorderAxis(node, resolvedRowAxis);
   
       // We only need to give a dimension for the text if we haven't got any
       // for it computed yet. It can either be from the style attribute or because
       // the element is flexible.
-      boolean isRowUndefined = !isDimDefined(node, CSSFlexDirection.ROW) &&
-        CSSConstants.isUndefined(getLayoutDimension(node, getDim(CSSFlexDirection.ROW)));
+      boolean isRowUndefined = !isDimDefined(node, resolvedRowAxis) &&
+        CSSConstants.isUndefined(getLayoutDimension(node, getDim(resolvedRowAxis)));
       boolean isColumnUndefined = !isDimDefined(node, CSSFlexDirection.COLUMN) &&
         CSSConstants.isUndefined(getLayoutDimension(node, getDim(CSSFlexDirection.COLUMN)));
   
@@ -422,7 +550,7 @@ namespace Facebook.CSSLayout
         );
         if (isRowUndefined) {
           node.layout.width = measureDim.width +
-            getPaddingAndBorderAxis(node, CSSFlexDirection.ROW);
+            getPaddingAndBorderAxis(node, resolvedRowAxis);
         }
         if (isColumnUndefined) {
           node.layout.height = measureDim.height +
@@ -510,9 +638,9 @@ namespace Facebook.CSSLayout
         child = node.getChildAt(i);
         float nextContentDim = 0;
   
-        // If it's a flexible child, accumulate the size that the child potentially
-        // contributes to the row
-        if (isFlex(child)) {
+        // It only makes sense to consider a child flexible if we have a computed
+        // dimension for the node.
+        if (!CSSConstants.isUndefined(getLayoutDimension(node, getDim(mainAxis))) && isFlex(child)) {
           flexibleChildrenCount++;
           totalFlexible = totalFlexible + getFlex(child);
   
@@ -525,20 +653,20 @@ namespace Facebook.CSSLayout
   
         } else {
           maxWidth = CSSConstants.UNDEFINED;
-          if (mainAxis != CSSFlexDirection.ROW) {
+          if (!isRowDirection(mainAxis)) {
             maxWidth = parentMaxWidth -
-              getMarginAxis(node, CSSFlexDirection.ROW) -
-              getPaddingAndBorderAxis(node, CSSFlexDirection.ROW);
+              getMarginAxis(node, resolvedRowAxis) -
+              getPaddingAndBorderAxis(node, resolvedRowAxis);
   
-            if (isDimDefined(node, CSSFlexDirection.ROW)) {
-              maxWidth = getLayoutDimension(node, getDim(CSSFlexDirection.ROW)) -
-                getPaddingAndBorderAxis(node, CSSFlexDirection.ROW);
+            if (isDimDefined(node, resolvedRowAxis)) {
+              maxWidth = getLayoutDimension(node, getDim(resolvedRowAxis)) -
+                getPaddingAndBorderAxis(node, resolvedRowAxis);
             }
           }
   
           // This is the main recursive call. We layout non flexible children.
           if (alreadyComputedNextLayout == 0) {
-            layoutNode(/*(java)!layoutContext, */child, maxWidth);
+            layoutNode(/*(java)!layoutContext, */child, maxWidth, direction);
           }
   
           // Absolute positioned elements do not take part of the layout, so we
@@ -578,7 +706,7 @@ namespace Facebook.CSSLayout
       if (!CSSConstants.isUndefined(getLayoutDimension(node, getDim(mainAxis)))) {
         remainingMainDim = definedMainDim - mainContentDim;
       } else {
-        remainingMainDim = boundAxis(node, mainAxis, Math.Max(mainContentDim, 0)) - mainContentDim;
+        remainingMainDim = Math.Max(mainContentDim, 0) - mainContentDim;
       }
   
       // If there are flexible children in the mix, they are going to fill the
@@ -624,17 +752,17 @@ namespace Facebook.CSSLayout
             ));
   
             maxWidth = CSSConstants.UNDEFINED;
-            if (isDimDefined(node, CSSFlexDirection.ROW)) {
-              maxWidth = getLayoutDimension(node, getDim(CSSFlexDirection.ROW)) -
-                getPaddingAndBorderAxis(node, CSSFlexDirection.ROW);
-            } else if (mainAxis != CSSFlexDirection.ROW) {
+            if (isDimDefined(node, resolvedRowAxis)) {
+              maxWidth = getLayoutDimension(node, getDim(resolvedRowAxis)) -
+                getPaddingAndBorderAxis(node, resolvedRowAxis);
+            } else if (!isRowDirection(mainAxis)) {
               maxWidth = parentMaxWidth -
-                getMarginAxis(node, CSSFlexDirection.ROW) -
-                getPaddingAndBorderAxis(node, CSSFlexDirection.ROW);
+                getMarginAxis(node, resolvedRowAxis) -
+                getPaddingAndBorderAxis(node, resolvedRowAxis);
             }
   
             // And we recursively call the layout algorithm for this child
-            layoutNode(/*(java)!layoutContext, */child, maxWidth);
+            layoutNode(/*(java)!layoutContext, */child, maxWidth, direction);
           }
         }
   
@@ -687,6 +815,11 @@ namespace Facebook.CSSLayout
           // If the child is position absolute (without top/left) or relative,
           // we put it at the current accumulated offset.
           setLayoutPosition(child, getPos(mainAxis), getLayoutPosition(child, getPos(mainAxis)) + mainDim);
+  
+          // Define the trailing position accordingly.
+          if (!CSSConstants.isUndefined(getLayoutDimension(node, getDim(mainAxis)))) {
+            setTrailingPosition(node, child, mainAxis);
+          }
         }
   
         // Now that we placed the element, we need to update the variables
@@ -700,19 +833,6 @@ namespace Facebook.CSSLayout
           // can only be one element in that cross dimension.
           crossDim = Math.Max(crossDim, boundAxis(child, crossAxis, getDimWithMargin(child, crossAxis)));
         }
-      }
-  
-      float containerMainAxis = getLayoutDimension(node, getDim(mainAxis));
-      // If the user didn't specify a width or height, and it has not been set
-      // by the container, then we set it via the children.
-      if (CSSConstants.isUndefined(containerMainAxis)) {
-        containerMainAxis = Math.Max(
-          // We're missing the last padding at this point to get the final
-          // dimension
-          boundAxis(node, mainAxis, mainDim + getPaddingAndBorder(node, getTrailing(mainAxis))),
-          // We can never assign a width smaller than the padding and borders
-          getPaddingAndBorderAxis(node, mainAxis)
-        );
       }
   
       float containerCrossAxis = getLayoutDimension(node, getDim(crossAxis));
@@ -794,6 +914,12 @@ namespace Facebook.CSSLayout
         // We can never assign a width smaller than the padding and borders
         getPaddingAndBorderAxis(node, mainAxis)
       ));
+  
+      // Now that the width is defined, we should update the trailing
+      // positions for the children.
+      for (int i = 0; i < node.getChildCount(); ++i) {
+        setTrailingPosition(node, node.getChildAt(i), mainAxis);
+      }
     }
   
     if (CSSConstants.isUndefined(getLayoutDimension(node, getDim(crossAxis)))) {

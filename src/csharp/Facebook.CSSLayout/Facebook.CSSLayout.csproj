@@ -41,6 +41,7 @@
     <Compile Include="CachedCSSLayout.cs" />
     <Compile Include="CSSAlign.cs" />
     <Compile Include="CSSConstants.cs" />
+    <Compile Include="CSSDirection.cs" />
     <Compile Include="CSSFlexDirection.cs" />
     <Compile Include="CSSJustify.cs" />
     <Compile Include="CSSLayout.cs" />

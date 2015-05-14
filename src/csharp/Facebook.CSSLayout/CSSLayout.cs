@@ -16,13 +16,17 @@ namespace Facebook.CSSLayout
 
 	class CSSLayout
 	{
-		public float X;
-		public float Y;
+		public float Left;
+		public float Top;
+		public float Right;
+		public float Bottom;
 		public float Width = CSSConstants.Undefined;
 		public float Height = CSSConstants.Undefined;
 
-		internal float x { get { return X; } set { X = value; } }
-		internal float y { get { return Y; } set { Y = value; } }
+		internal float left { get { return Left; } set { Left = value; } }
+		internal float top { get { return Top; } set { Top = value; } }
+		internal float right { get { return Right; } set { Right = value; } }
+		internal float bottom { get { return Bottom; } set { Bottom = value; } }
 		internal float width { get { return Width; } set { Width = value; } }
 		internal float height { get { return Height; } set { Height = value; } }
 
@@ -32,16 +36,20 @@ namespace Facebook.CSSLayout
 
 		public void resetResult()
 		{
-			X = 0;
-			y = 0;
+			Left = 0;
+			Top = 0;
+			Right = 0;
+			Bottom = 0;
 			Width = CSSConstants.Undefined;
 			Height = CSSConstants.Undefined;
 		}
 
 		public void copy(CSSLayout layout)
 		{
-			X = layout.X;
-			y = layout.y;
+			Left = layout.Left;
+			Top = layout.Top;
+			Right = layout.Right;
+			Bottom = layout.Bottom;
 			Width = layout.Width;
 			Height = layout.Height;
 		}
@@ -49,8 +57,8 @@ namespace Facebook.CSSLayout
 		public override string ToString()
 		{
 			return "Layout: {" +
-					"X: " + X + ", " +
-					"Y: " + y + ", " +
+					"Left: " + Left + ", " +
+					"Top: " + Top + ", " +
 					"Width: " + Width + ", " +
 					"Height: " + Height +
 					"}";

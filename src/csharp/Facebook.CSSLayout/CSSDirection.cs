@@ -1,4 +1,4 @@
-/**
+﻿/**
  * Copyright (c) 2014, Facebook, Inc.
  * All rights reserved.
  *
@@ -9,16 +9,12 @@
 
 namespace Facebook.CSSLayout
 {
-	public enum CSSFlexDirection
+	public enum CSSDirection
 	{
-		Column,
-		ColumnReverse,
-		Row,
-		RowReverse,
+		Inherit,
+		LTR,
+		RTL,
 
-		COLUMN = Column,
-		COLUMN_REVERSE = ColumnReverse,
-		ROW = Row,
-		ROW_REVERSE = RowReverse
+		INHERIT = Inherit
 	}
 }

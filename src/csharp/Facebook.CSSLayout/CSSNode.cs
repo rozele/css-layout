@@ -157,7 +157,7 @@ namespace Facebook.CSSLayout
 		public void CalculateLayout()
 		{
 			layout.resetResult();
-			LayoutEngine.layoutNode(this, CSSConstants.Undefined);
+			LayoutEngine.layoutNode(this, CSSConstants.Undefined, null);
 		}
 
 		/**
@@ -479,8 +479,8 @@ namespace Facebook.CSSLayout
 			dirty();
 		}
 
-		public float LayoutX { get { return layout.X; } }
-		public float LayoutY { get { return layout.Y; } }
+		public float LayoutX { get { return layout.Left; } }
+		public float LayoutY { get { return layout.Top; } }
 		public float LayoutWidth { get { return layout.Width; } }
 		public float LayoutHeight { get { return layout.Height; } }
 	}
