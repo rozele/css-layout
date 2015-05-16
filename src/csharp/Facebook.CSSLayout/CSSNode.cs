@@ -48,10 +48,6 @@ namespace Facebook.CSSLayout
 			UP_TO_DATE,
 		}
 
-		readonly float[] mMargin = Spacing.newFullSpacingArray();
-		readonly float[] mPadding = Spacing.newFullSpacingArray();
-		readonly float[] mBorder = Spacing.newFullSpacingArray();
-
 		internal readonly CSSStyle style = new CSSStyle();
 		internal readonly CSSLayout layout = new CSSLayout();
 		internal readonly CachedCSSLayout lastLayout = new CachedCSSLayout();
@@ -323,69 +319,67 @@ namespace Facebook.CSSLayout
 			set { updateFloatValue(ref style.flex, value); }
 		}
 
-		public float GetMargin(SpacingType spacingType)
-		{
-			return GetSpacing(mMargin, spacingType);
-		}
-
 		public void SetMargin(SpacingType spacingType, float margin)
 		{
-			SetSpacing(mMargin, style.margin, spacingType, margin);
+			if (style.margin.set((int)spacingType, margin))
+				dirty();
+		}
+
+		internal void setMargin(int spacingType, float margin)
+		{
+			SetMargin((SpacingType)spacingType, margin);
+		}
+
+		public float GetMargin(SpacingType spacingType)
+		{
+			return style.margin.GetRaw(spacingType);
 		}
 
 		public float GetEffectiveMargin(SpacingType spacingType)
 		{
-			return GetSpacing(style.margin, spacingType);
-		}
-
-		public float GetPadding(SpacingType spacingType)
-		{
-			return GetSpacing(mPadding, spacingType);
+			return style.margin.Get(spacingType);
 		}
 
 		public void SetPadding(SpacingType spacingType, float padding)
 		{
-			SetSpacing(mPadding, style.padding, spacingType, padding);
+			if (style.padding.set((int)spacingType, padding))
+				dirty();
+		}
+
+		internal void setPadding(int spacingType, float padding)
+		{
+			SetPadding((SpacingType) spacingType, padding);
+		}
+
+		public float GetPadding(SpacingType spacingType)
+		{
+			return style.padding.GetRaw(spacingType);
 		}
 
 		public float GetEffectivePadding(SpacingType spacingType)
 		{
-			return GetSpacing(style.padding, spacingType);
-		}
-
-		public float GetBorder(SpacingType spacingType)
-		{
-			return GetSpacing(mBorder, spacingType);
+			return style.padding.Get(spacingType);
 		}
 
 		public void SetBorder(SpacingType spacingType, float border)
 		{
-			SetSpacing(mBorder, style.border, spacingType, border);
-		}
-
-		public void GetEffectiveBorder(SpacingType spacingType)
-		{
-			GetSpacing(style.border, spacingType);
-		}
-
-		protected float GetSpacing(
-			float[] spacingDef,
-			SpacingType spacingType)
-		{
-			return spacingDef[(int) spacingType];
-		}
-
-		protected void SetSpacing(
-			float[] spacingDef,
-			float[] cssStyle,
-			SpacingType spacingType,
-			float spacing)
-		{
-			if (!valuesEqual(GetSpacing(spacingDef, spacingType), spacing))
-			{
-				Spacing.updateSpacing(spacingDef, cssStyle, (int)spacingType, spacing, 0);
+			if (style.border.set((int)spacingType, border))
 				dirty();
-			}
+		}
+
+		internal void setBorder(int spacingType, float border)
+		{
+			SetBorder((SpacingType) spacingType, border);
+		}
+
+		public float GetBorder(SpacingType spacingType)
+		{
+			return style.border.GetRaw(spacingType);
+		}
+
+		public float GetEffectiveBorder(SpacingType spacingType)
+		{
+			return style.border.Get(spacingType);
 		}
 
 		public float PositionTop
@@ -412,7 +406,6 @@ namespace Facebook.CSSLayout
 			set { updateFloatValue(ref style.positionRight, value); }
 		}
 
-		[Obsolete("Use Width")]
 		public float StyleWidth
 		{
 			get { return Width; }
@@ -425,7 +418,6 @@ namespace Facebook.CSSLayout
 			set { updateFloatValue(ref style.width, value); }
 		}
 
-		[Obsolete("Use Height")]
 		public float StyleHeight
 		{
 			get { return Height; }
@@ -483,6 +475,22 @@ namespace Facebook.CSSLayout
 		public float LayoutY { get { return layout.Top; } }
 		public float LayoutWidth { get { return layout.Width; } }
 		public float LayoutHeight { get { return layout.Height; } }
+
+
+		/**
+		 * Get this node's padding, as defined by style + default padding.
+		 */
+
+		public Spacing Padding { get { return style.padding; } }
+
+		/**
+		 * Set a default padding (left/top/right/bottom) for this node.
+		 */
+		public void SetDefaultPadding(SpacingType spacingType, float padding)
+		{
+			if (style.padding.setDefault((int) spacingType, padding))
+				dirty();
+		}
 	}
 
 	internal static class CSSNodeExtensions

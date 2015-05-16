@@ -26,6 +26,8 @@ namespace Facebook.CSSLayout
 			LEFT,
 			BOTTOM,
 			RIGHT,
+			START,
+			END
 		}
 
 		enum DimensionIndex
@@ -218,16 +220,48 @@ namespace Facebook.CSSLayout
 			switch (position)
 			{
 			case PositionIndex.TOP:
-				return node.style.margin[Spacing.TOP];
+				return node.style.margin.get(Spacing.TOP);
 			case PositionIndex.BOTTOM:
-				return node.style.margin[Spacing.BOTTOM];
+				return node.style.margin.get(Spacing.BOTTOM);
 			case PositionIndex.LEFT:
-				return node.style.margin[Spacing.LEFT];
+				return node.style.margin.get(Spacing.LEFT);
 			case PositionIndex.RIGHT:
-				return node.style.margin[Spacing.RIGHT];
+				return node.style.margin.get(Spacing.RIGHT);
+			case PositionIndex.START:
+				return node.style.margin.get(Spacing.START);
+			case PositionIndex.END:
+				return node.style.margin.get(Spacing.END);
 			default:
 				throw new Exception("Someone added a new cardinal direction...");
 			}
+		}
+
+		static float getLeadingMargin(CSSNode node, CSSFlexDirection axis)
+		{
+			if (isRowDirection(axis))
+			{
+				float leadingMargin = node.style.margin.getRaw(Spacing.START);
+				if (!CSSConstants.isUndefined(leadingMargin))
+				{
+					return leadingMargin;
+				}
+			}
+
+			return getMargin(node, getLeading(axis));
+		}
+
+		static float getTrailingMargin(CSSNode node, CSSFlexDirection axis)
+		{
+			if (isRowDirection(axis))
+			{
+				float trailingMargin = node.style.margin.getRaw(Spacing.END);
+				if (!CSSConstants.isUndefined(trailingMargin))
+				{
+					return trailingMargin;
+				}
+			}
+
+			return getMargin(node, getTrailing(axis));
 		}
 
 		static float getPadding(CSSNode node, PositionIndex position)
@@ -235,16 +269,48 @@ namespace Facebook.CSSLayout
 			switch (position)
 			{
 			case PositionIndex.TOP:
-				return node.style.padding[Spacing.TOP];
+				return node.style.padding.get(Spacing.TOP);
 			case PositionIndex.BOTTOM:
-				return node.style.padding[Spacing.BOTTOM];
+				return node.style.padding.get(Spacing.BOTTOM);
 			case PositionIndex.LEFT:
-				return node.style.padding[Spacing.LEFT];
+				return node.style.padding.get(Spacing.LEFT);
 			case PositionIndex.RIGHT:
-				return node.style.padding[Spacing.RIGHT];
+				return node.style.padding.get(Spacing.RIGHT);
+			case PositionIndex.START:
+				return node.style.padding.get(Spacing.START);
+			case PositionIndex.END:
+				return node.style.padding.get(Spacing.END);
 			default:
 				throw new Exception("Someone added a new cardinal direction...");
 			}
+		}
+
+		static float getLeadingPadding(CSSNode node, CSSFlexDirection axis)
+		{
+			if (isRowDirection(axis))
+			{
+				float leadingPadding = node.style.padding.getRaw(Spacing.START);
+				if (!CSSConstants.isUndefined(leadingPadding))
+				{
+					return leadingPadding;
+				}
+			}
+
+			return getPadding(node, getLeading(axis));
+		}
+
+		static float getTrailingPadding(CSSNode node, CSSFlexDirection axis)
+		{
+			if (isRowDirection(axis))
+			{
+				float trailingPadding = node.style.padding.getRaw(Spacing.END);
+				if (!CSSConstants.isUndefined(trailingPadding))
+				{
+					return trailingPadding;
+				}
+			}
+
+			return getPadding(node, getTrailing(axis));
 		}
 
 		static float getBorder(CSSNode node, PositionIndex position)
@@ -252,38 +318,73 @@ namespace Facebook.CSSLayout
 			switch (position)
 			{
 			case PositionIndex.TOP:
-				return node.style.border[Spacing.TOP];
+				return node.style.border.get(Spacing.TOP);
 			case PositionIndex.BOTTOM:
-				return node.style.border[Spacing.BOTTOM];
+				return node.style.border.get(Spacing.BOTTOM);
 			case PositionIndex.LEFT:
-				return node.style.border[Spacing.LEFT];
+				return node.style.border.get(Spacing.LEFT);
 			case PositionIndex.RIGHT:
-				return node.style.border[Spacing.RIGHT];
+				return node.style.border.get(Spacing.RIGHT);
+			case PositionIndex.START:
+				return node.style.border.get(Spacing.START);
+			case PositionIndex.END:
+				return node.style.border.get(Spacing.END);
 			default:
 				throw new Exception("Someone added a new cardinal direction...");
 			}
 		}
 
-		static float getPaddingAndBorder(CSSNode node, PositionIndex position)
+		static float getLeadingBorder(CSSNode node, CSSFlexDirection axis)
 		{
-			return getPadding(node, position) + getBorder(node, position);
+			if (isRowDirection(axis))
+			{
+				float leadingBorder = node.style.border.getRaw(Spacing.START);
+				if (!CSSConstants.isUndefined(leadingBorder))
+				{
+					return leadingBorder;
+				}
+			}
+
+			return getBorder(node, getLeading(axis));
+		}
+
+		static float getTrailingBorder(CSSNode node, CSSFlexDirection axis)
+		{
+			if (isRowDirection(axis))
+			{
+				float trailingBorder = node.style.border.getRaw(Spacing.END);
+				if (!CSSConstants.isUndefined(trailingBorder))
+				{
+					return trailingBorder;
+				}
+			}
+
+			return getBorder(node, getTrailing(axis));
+		}
+
+		static float getLeadingPaddingAndBorder(CSSNode node, CSSFlexDirection axis)
+		{
+			return getLeadingPadding(node, axis) + getLeadingBorder(node, axis);
+		}
+
+		static float getTrailingPaddingAndBorder(CSSNode node, CSSFlexDirection axis)
+		{
+			return getTrailingPadding(node, axis) + getTrailingBorder(node, axis);
+		}
+
+		static float getBorderAxis(CSSNode node, CSSFlexDirection axis)
+		{
+			return getLeadingBorder(node, axis) + getTrailingBorder(node, axis);
 		}
 
 		static float getMarginAxis(CSSNode node, CSSFlexDirection axis)
 		{
-			return getMargin(node, getLeading(axis)) + getMargin(node, getTrailing(axis));
+			return getLeadingMargin(node, axis) + getTrailingMargin(node, axis);
 		}
 
 		static float getPaddingAndBorderAxis(CSSNode node, CSSFlexDirection axis)
 		{
-			return getPaddingAndBorder(
-				node,
-				getLeading(axis)) + getPaddingAndBorder(node, getTrailing(axis));
-		}
-
-		static float getBorderAxis(CSSNode node, CSSFlexDirection axis) 
-		{
-			return getBorder(node, getLeading(axis)) + getBorder(node, getTrailing(axis));
+			return getLeadingPaddingAndBorder(node, axis) + getTrailingPaddingAndBorder(node, axis);
 		}
 
 		static float boundAxis(CSSNode node, CSSFlexDirection axis, float value)
@@ -462,8 +563,8 @@ namespace Facebook.CSSLayout
 		static float getDimWithMargin(CSSNode node, CSSFlexDirection axis)
 		{
 			return getLayoutDimension(node, getDim(axis)) +
-					getMargin(node, getLeading(axis)) +
-					getMargin(node, getTrailing(axis));
+					getLeadingMargin(node, axis) +
+					getTrailingMargin(node, axis);
 		}
 
 		static boolean needsRelayout(CSSNode node, float parentMaxWidth)
@@ -514,13 +615,13 @@ namespace Facebook.CSSLayout
   
     // The position is set by the parent, but we need to complete it with a
     // delta composed of the margin and left/top/right/bottom
-    setLayoutPosition(node, getLeading(mainAxis), getLayoutPosition(node, getLeading(mainAxis)) + getMargin(node, getLeading(mainAxis)) +
+    setLayoutPosition(node, getLeading(mainAxis), getLayoutPosition(node, getLeading(mainAxis)) + getLeadingMargin(node, mainAxis) +
       getRelativePosition(node, mainAxis));
-    setLayoutPosition(node, getTrailing(mainAxis), getLayoutPosition(node, getTrailing(mainAxis)) + getMargin(node, getTrailing(mainAxis)) +
+    setLayoutPosition(node, getTrailing(mainAxis), getLayoutPosition(node, getTrailing(mainAxis)) + getTrailingMargin(node, mainAxis) +
       getRelativePosition(node, mainAxis));
-    setLayoutPosition(node, getLeading(crossAxis), getLayoutPosition(node, getLeading(crossAxis)) + getMargin(node, getLeading(crossAxis)) +
+    setLayoutPosition(node, getLeading(crossAxis), getLayoutPosition(node, getLeading(crossAxis)) + getLeadingMargin(node, crossAxis) +
       getRelativePosition(node, crossAxis));
-    setLayoutPosition(node, getTrailing(crossAxis), getLayoutPosition(node, getTrailing(crossAxis)) + getMargin(node, getTrailing(crossAxis)) +
+    setLayoutPosition(node, getTrailing(crossAxis), getLayoutPosition(node, getTrailing(crossAxis)) + getTrailingMargin(node, crossAxis) +
       getRelativePosition(node, crossAxis));
   
     if (isMeasureDefined(node)) {
@@ -557,7 +658,9 @@ namespace Facebook.CSSLayout
             getPaddingAndBorderAxis(node, CSSFlexDirection.COLUMN);
         }
       }
-      return;
+      if (node.getChildCount() == 0) {
+        return;
+      }
     }
   
     //    int i;
@@ -685,6 +788,7 @@ namespace Facebook.CSSLayout
             // If there's only one element, then it's bigger than the content
             // and needs its own line
             i != startLine) {
+          nonFlexibleChildrenCount--;
           alreadyComputedNextLayout = 1;
           break;
         }
@@ -798,7 +902,7 @@ namespace Facebook.CSSLayout
       // container!
       float crossDim = 0;
       float mainDim = leadingMainDim +
-        getPaddingAndBorder(node, getLeading(mainAxis));
+        getLeadingPaddingAndBorder(node, mainAxis);
   
       for (int i = startLine; i < endLine; ++i) {
         child = node.getChildAt(i);
@@ -809,8 +913,8 @@ namespace Facebook.CSSLayout
           // defined, we override the position to whatever the user said
           // (and margin/border).
           setLayoutPosition(child, getPos(mainAxis), getPosition(child, getLeading(mainAxis)) +
-            getBorder(node, getLeading(mainAxis)) +
-            getMargin(child, getLeading(mainAxis)));
+            getLeadingBorder(node, mainAxis) +
+            getLeadingMargin(child, mainAxis));
         } else {
           // If the child is position absolute (without top/left) or relative,
           // we put it at the current accumulated offset.
@@ -857,11 +961,11 @@ namespace Facebook.CSSLayout
           // top/left/bottom/right being set, we override all the previously
           // computed positions to set it correctly.
           setLayoutPosition(child, getPos(crossAxis), getPosition(child, getLeading(crossAxis)) +
-            getBorder(node, getLeading(crossAxis)) +
-            getMargin(child, getLeading(crossAxis)));
+            getLeadingBorder(node, crossAxis) +
+            getLeadingMargin(child, crossAxis));
   
         } else {
-          float leadingCrossDim = getPaddingAndBorder(node, getLeading(crossAxis));
+          float leadingCrossDim = getLeadingPaddingAndBorder(node, crossAxis);
   
           // For a relative children, we're either using alignItems (parent) or
           // alignSelf (child) in order to determine the position in the cross axis
@@ -896,6 +1000,11 @@ namespace Facebook.CSSLayout
   
           // And we apply the position
           setLayoutPosition(child, getPos(crossAxis), getLayoutPosition(child, getPos(crossAxis)) + linesCrossDim + leadingCrossDim);
+  
+          // Define the trailing position accordingly.
+          if (!CSSConstants.isUndefined(getLayoutDimension(node, getDim(crossAxis)))) {
+            setTrailingPosition(node, child, crossAxis);
+          }
         }
       }
   
@@ -904,22 +1013,21 @@ namespace Facebook.CSSLayout
       startLine = endLine;
     }
   
+    boolean needsMainTrailingPos = false;
+    boolean needsCrossTrailingPos = false;
+  
     // If the user didn't specify a width or height, and it has not been set
     // by the container, then we set it via the children.
     if (CSSConstants.isUndefined(getLayoutDimension(node, getDim(mainAxis)))) {
       setLayoutDimension(node, getDim(mainAxis), Math.Max(
         // We're missing the last padding at this point to get the final
         // dimension
-        boundAxis(node, mainAxis, linesMainDim + getPaddingAndBorder(node, getTrailing(mainAxis))),
+        boundAxis(node, mainAxis, linesMainDim + getTrailingPaddingAndBorder(node, mainAxis)),
         // We can never assign a width smaller than the padding and borders
         getPaddingAndBorderAxis(node, mainAxis)
       ));
   
-      // Now that the width is defined, we should update the trailing
-      // positions for the children.
-      for (int i = 0; i < node.getChildCount(); ++i) {
-        setTrailingPosition(node, node.getChildAt(i), mainAxis);
-      }
+      needsMainTrailingPos = true;
     }
   
     if (CSSConstants.isUndefined(getLayoutDimension(node, getDim(crossAxis)))) {
@@ -930,9 +1038,27 @@ namespace Facebook.CSSLayout
         boundAxis(node, crossAxis, linesCrossDim + getPaddingAndBorderAxis(node, crossAxis)),
         getPaddingAndBorderAxis(node, crossAxis)
       ));
+  
+      needsCrossTrailingPos = true;
     }
   
-    // <Loop E> Calculate dimensions for absolutely positioned elements
+    // <Loop E> Set trailing position if necessary
+  
+    if (needsMainTrailingPos || needsCrossTrailingPos) {
+      for (int i = 0; i < node.getChildCount(); ++i) {
+        child = node.getChildAt(i);
+  
+        if (needsMainTrailingPos) {
+          setTrailingPosition(node, child, mainAxis);
+        }
+  
+        if (needsCrossTrailingPos) {
+          setTrailingPosition(node, child, crossAxis);
+        }
+      }
+    }
+  
+    // <Loop F> Calculate dimensions for absolutely positioned elements
   
     for (int i = 0; i < node.getChildCount(); ++i) {
       child = node.getChildAt(i);

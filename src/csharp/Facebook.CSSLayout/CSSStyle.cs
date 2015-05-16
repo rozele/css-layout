@@ -23,9 +23,9 @@ namespace Facebook.CSSLayout
 		public CSSWrap flexWrap = CSSWrap.NoWrap;
 		public float flex;
 
-		public float[] margin = Spacing.newSpacingResultArray();
-		public float[] padding = Spacing.newSpacingResultArray();
-		public float[] border = Spacing.newSpacingResultArray();
+		public Spacing margin = new Spacing();
+		public Spacing padding = new Spacing();
+		public Spacing border = new Spacing();
 
 		public float positionTop = CSSConstants.Undefined;
 		public float positionBottom = CSSConstants.Undefined;
