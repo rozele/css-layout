@@ -291,6 +291,12 @@ namespace Facebook.CSSLayout
 			set { updateDiscreteValue(ref style.justifyContent, value); }
 		}
 
+		public CSSAlign AlignContent
+		{
+			get { return style.alignContent; }
+			set { updateDiscreteValue(ref style.alignContent, value); }
+		}
+
 		public CSSAlign AlignItems
 		{
 			get { return style.alignItems; }
