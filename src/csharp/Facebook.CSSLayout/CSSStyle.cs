@@ -17,6 +17,7 @@ namespace Facebook.CSSLayout
 		public CSSDirection direction = CSSDirection.Inherit;
 		public CSSFlexDirection flexDirection = CSSFlexDirection.Column;
 		public CSSJustify justifyContent = CSSJustify.FlexStart;
+		public CSSAlign alignContent = CSSAlign.FlexStart;
 		public CSSAlign alignItems = CSSAlign.Stretch;
 		public CSSAlign alignSelf = CSSAlign.Auto;
 		public CSSPositionType positionType = CSSPositionType.RELATIVE;

@@ -52,6 +52,8 @@ namespace Facebook.CSSLayout
 		internal readonly CSSLayout layout = new CSSLayout();
 		internal readonly CachedCSSLayout lastLayout = new CachedCSSLayout();
 
+		internal int lineIndex = 0;
+
 		// 4 is kinda arbitrary, but the default of 10 seems really high for an average View.
 		readonly List<CSSNode> mChildren = new List<CSSNode>(4);
 		[Nullable] CSSNode mParent;
