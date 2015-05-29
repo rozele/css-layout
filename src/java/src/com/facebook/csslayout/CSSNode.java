@@ -129,7 +129,7 @@ public class CSSNode {
   /**
    * See {@link LayoutState#DIRTY}.
    */
-  /*package*/ boolean isDirty() {
+  protected boolean isDirty() {
     return mLayoutState == LayoutState.DIRTY;
   }
 
@@ -209,6 +209,13 @@ public class CSSNode {
       return o2 == null;
     }
     return o1.equals(o2);
+  }
+
+  public void setDirection(CSSDirection direction) {
+    if (!valuesEqual(style.direction, direction)) {
+      style.direction = direction;
+      dirty();
+    }
   }
 
   public void setFlexDirection(CSSFlexDirection flexDirection) {
@@ -336,6 +343,10 @@ public class CSSNode {
     return layout.height;
   }
 
+  public CSSDirection getLayoutDirection() {
+    return layout.direction;
+  }
+
   /**
    * Get this node's padding, as defined by style + default padding.
    */
@@ -355,6 +366,13 @@ public class CSSNode {
    */
   public float getStyleHeight() {
     return style.height;
+  }
+
+  /**
+   * Get this node's direction, as defined in the style.
+   */
+  public CSSDirection getStyleDirection() {
+    return style.direction;
   }
 
   /**
