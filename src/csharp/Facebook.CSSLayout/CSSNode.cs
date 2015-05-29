@@ -279,6 +279,12 @@ namespace Facebook.CSSLayout
 			return o1.Equals(o2);
 		}
 
+		public CSSDirection Direction
+		{
+			get { return style.direction; }
+			set { updateDiscreteValue(ref style.direction, value); }
+		}
+
 		public CSSFlexDirection FlexDirection
 		{
 			get { return style.flexDirection; }
@@ -483,7 +489,7 @@ namespace Facebook.CSSLayout
 		public float LayoutY { get { return layout.Top; } }
 		public float LayoutWidth { get { return layout.Width; } }
 		public float LayoutHeight { get { return layout.Height; } }
-
+		public CSSDirection LayoutDirection { get { return layout.Direction; } }
 
 		/**
 		 * Get this node's padding, as defined by style + default padding.

@@ -22,6 +22,7 @@ namespace Facebook.CSSLayout
 		public float Bottom;
 		public float Width = CSSConstants.Undefined;
 		public float Height = CSSConstants.Undefined;
+		public CSSDirection Direction = CSSDirection.LTR;
 
 		internal float left { get { return Left; } set { Left = value; } }
 		internal float top { get { return Top; } set { Top = value; } }
@@ -29,6 +30,7 @@ namespace Facebook.CSSLayout
 		internal float bottom { get { return Bottom; } set { Bottom = value; } }
 		internal float width { get { return Width; } set { Width = value; } }
 		internal float height { get { return Height; } set { Height = value; } }
+		internal CSSDirection direction { get { return Direction; } set { Direction = value; } }
 
 		/**
 		* This should always get called before calling {@link LayoutEngine#layoutNode(CSSNode, float)}
@@ -42,6 +44,7 @@ namespace Facebook.CSSLayout
 			Bottom = 0;
 			Width = CSSConstants.Undefined;
 			Height = CSSConstants.Undefined;
+			Direction = CSSDirection.LTR;
 		}
 
 		public void copy(CSSLayout layout)
@@ -52,6 +55,7 @@ namespace Facebook.CSSLayout
 			Bottom = layout.Bottom;
 			Width = layout.Width;
 			Height = layout.Height;
+			Direction = layout.Direction;
 		}
 
 		public override string ToString()
@@ -60,7 +64,8 @@ namespace Facebook.CSSLayout
 					"Left: " + Left + ", " +
 					"Top: " + Top + ", " +
 					"Width: " + Width + ", " +
-					"Height: " + Height +
+					"Height: " + Height + ", " +
+					"Direction: " + Direction +
 					"}";
 		}
 	}

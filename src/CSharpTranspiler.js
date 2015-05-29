@@ -37,6 +37,9 @@ function __transpileToCSharpCommon(code) {
     .replace(
         /(\w+)\.layout\[((?:getTrailing|getPos)\([^\)]+\))\]\s+=\s+([^;]+);/gm,
         'setLayoutPosition($1, $2, $3);')
+	 .replace(
+		/(\w+)\.layout\.direction\s+=\s+([^;]+);/gm,
+		'setLayoutDirection($1, $2);')
     .replace(/(\w+)\.layout\[((?:getLeading|getPos)\([^\]]+\))\]/g, 'getLayoutPosition($1, $2)')
 	.replace(/(\w+)\.layout\[((?:getTrailing|getPos)\([^\]]+\))\]/g, 'getLayoutPosition($1, $2)')
     .replace(

@@ -102,6 +102,11 @@ namespace Facebook.CSSLayout
 			}
 		}
 
+		static void setLayoutDirection(CSSNode node, CSSDirection direction)
+		{
+			node.layout.direction = direction;
+		}
+
 		static float getStylePosition(CSSNode node, PositionIndex position)
 		{
 			switch (position)
@@ -617,6 +622,9 @@ namespace Facebook.CSSLayout
     // Handle width and height style attributes
     setDimensionFromStyle(node, mainAxis);
     setDimensionFromStyle(node, crossAxis);
+  
+    // Set the resolved resolution in the node's layout
+    setLayoutDirection(node, direction);
   
     // The position is set by the parent, but we need to complete it with a
     // delta composed of the margin and left/top/right/bottom
