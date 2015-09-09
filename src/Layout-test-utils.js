@@ -6,7 +6,7 @@
  * LICENSE file in the root directory of this source tree. An additional grant
  * of patent rights can be found in the PATENTS file in the same directory.
  */
-/* globals document, computeLayout */
+/* globals document, computeLayout, navigator */
 
 var layoutTestUtils = (function() {
 
@@ -114,8 +114,23 @@ var layoutTestUtils = (function() {
 
   if (typeof computeLayout === 'object') {
     var fillNodes = computeLayout.fillNodes;
-    var extractNodes = computeLayout.extractNodes;
     var realComputeLayout = computeLayout.computeLayout;
+  }
+
+  function extractNodes(node) {
+    var layout = node.layout;
+    delete node.layout;
+    if (node.children && node.children.length > 0) {
+      layout.children = node.children.map(extractNodes);
+    } else {
+      delete node.children;
+    }
+
+    delete layout.right;
+    delete layout.bottom;
+    delete layout.direction;
+
+    return layout;
   }
 
   function roundLayout(layout) {
@@ -408,14 +423,14 @@ var layoutTestUtils = (function() {
     smallWidth: 34.671875,
     smallHeight: 18,
     bigWidth: 172.421875,
-    bigHeight: 37,
+    bigHeight: 36,
     bigMinWidth: 100.4375
   };
 
   // Note(prenaux): Clearly not what I would like, but it seems to be the only
   //                way :( My guess is that since the font on Windows is
   //                different than on OSX it has a different size.
-  if (typeof navigator !== 'undefined' && navigator.userAgent.indexOf("Windows NT") > -1) {
+  if (typeof navigator !== 'undefined' && navigator.userAgent.indexOf('Windows NT') > -1) {
     preDefinedTextSizes.bigHeight = 36;
   }
 
@@ -450,7 +465,7 @@ var layoutTestUtils = (function() {
       testNamedLayout('expected-dom', expectedLayout, domLayout);
       testNamedLayout('layout-dom', layout, domLayout);
     },
-    testLayoutAgainstDomOnly: function(node, expectedLayout) {
+    testLayoutAgainstDomOnly: function(node) {
       var layout = computeCSSLayout(node);
       var domLayout = computeDOMLayout(node);
       inplaceRoundNumbersInObject(layout);

@@ -1,16 +1,22 @@
 {
   "name": "css-layout",
-  "version": "0.0.2",
+  "version": "1.0.0",
   "description": "Reimplementation of CSS layout using pure JavaScript",
-  "main": "src/main.js",
+  "main": "dist/css-layout.js",
   "scripts": {
-    "pretest": "./node_modules/eslint/bin/eslint.js src",
-    "test": "./node_modules/karma/bin/karma start ./karma.conf.js --single-run"
+    "watch": "grunt watch",
+    "test": "grunt ci",
+    "postversion": "git push --tags upstream HEAD:master"
   },
   "repository": {
     "type": "git",
     "url": "https://github.com/facebook/css-layout.git"
   },
+  "keywords": [
+    "css",
+    "flexbox",
+    "layout"
+  ],
   "author": "",
   "license": "BSD",
   "bugs": {
@@ -18,10 +24,23 @@
   },
   "homepage": "https://github.com/facebook/css-layout",
   "devDependencies": {
-    "eslint": "^0.14.1",
+    "grunt": "^0.4.5",
+    "grunt-cli": "^0.1.13",
+    "grunt-contrib-clean": "^0.6.0",
+    "grunt-contrib-concat": "^0.5.1",
+    "grunt-contrib-copy": "^0.8.0",
+    "grunt-contrib-uglify": "^0.9.1",
+    "grunt-contrib-watch": "^0.6.1",
+    "grunt-eslint": "^17.1.0",
+    "grunt-execute": "^0.2.2",
+    "grunt-include-replace": "^3.1.0",
+    "grunt-karma": "^0.12.0",
+    "grunt-mkdir": "^0.1.2",
+    "grunt-shell": "^1.1.2",
     "jasmine-core": "^2.2.0",
-    "karma": "^0.12.31",
+    "karma": "^0.13.8",
     "karma-chrome-launcher": "^0.1.7",
-    "karma-jasmine": "^0.3.5"
+    "karma-jasmine": "^0.3.5",
+    "load-grunt-tasks": "^3.2.0"
   }
 }
