@@ -10,7 +10,7 @@
     <projectUrl>https://github.com/pragmatrix/css-layout</projectUrl>
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
     <description>$description$</description>
-    <releaseNotes>First version of the csharp port of Facebook's css-layout Java API and flexbox layouting algorithm.</releaseNotes>
+    <releaseNotes>Synchronize version number with Facebook's css-layout repository.</releaseNotes>
     <copyright>Copyright 2015 Facebook</copyright>
     <tags>flexbox flex-box css layout css-layout facebook</tags>
   </metadata>
