@@ -1,3 +1,9 @@
+# This is an unofficial C#/.NET port of Facebook's css-layout
+
+[![Build status](https://ci.appveyor.com/api/projects/status/i20ml6j751fd5qqg/branch/csharp?svg=true)](https://ci.appveyor.com/project/pragmatrix/css-layout/branch/csharp)
+
+Also [available via NuGet](https://www.nuget.org/packages/Facebook.CSSLayout/).
+
 css-layout [![Build Status](https://travis-ci.org/facebook/css-layout.svg?branch=master)](https://travis-ci.org/facebook/css-layout)
 ==========
 
