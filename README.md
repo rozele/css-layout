@@ -2,7 +2,9 @@
 
 [![Build status](https://ci.appveyor.com/api/projects/status/i20ml6j751fd5qqg/branch/csharp?svg=true)](https://ci.appveyor.com/project/pragmatrix/css-layout/branch/csharp)
 
-Also [available via NuGet](https://www.nuget.org/packages/Facebook.CSSLayout/).
+The Visual Studio 2015 C#/.NET project is located at [src/csharp](https://github.com/pragmatrix/css-layout/tree/csharp/src/csharp).
+
+And the binaries are [available via NuGet](https://www.nuget.org/packages/Facebook.CSSLayout/).
 
 css-layout [![Build Status](https://travis-ci.org/facebook/css-layout.svg?branch=master)](https://travis-ci.org/facebook/css-layout)
 ==========
