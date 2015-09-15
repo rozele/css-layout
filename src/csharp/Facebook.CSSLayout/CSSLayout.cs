@@ -7,6 +7,8 @@
  * of patent rights can be found in the PATENTS file in the same directory.
  */
 
+using System;
+
 namespace Facebook.CSSLayout
 {
 
@@ -16,21 +18,17 @@ namespace Facebook.CSSLayout
 
 	class CSSLayout
 	{
-		public float Left;
-		public float Top;
-		public float Right;
-		public float Bottom;
-		public float Width = CSSConstants.Undefined;
-		public float Height = CSSConstants.Undefined;
-		public CSSDirection Direction = CSSDirection.LTR;
+		public const int POSITION_LEFT = 0;
+		public const int POSITION_TOP = 1;
+		public const int POSITION_RIGHT = 2;
+		public const int POSITION_BOTTOM = 3;
 
-		internal float left { get { return Left; } set { Left = value; } }
-		internal float top { get { return Top; } set { Top = value; } }
-		internal float right { get { return Right; } set { Right = value; } }
-		internal float bottom { get { return Bottom; } set { Bottom = value; } }
-		internal float width { get { return Width; } set { Width = value; } }
-		internal float height { get { return Height; } set { Height = value; } }
-		internal CSSDirection direction { get { return Direction; } set { Direction = value; } }
+		public const int DIMENSION_WIDTH = 0;
+		public const int DIMENSION_HEIGHT = 1;
+
+		public float[] position = new float[4];
+		public float[] dimensions = new float[2];
+		public CSSDirection direction = CSSDirection.LTR;
 
 		/**
 		* This should always get called before calling {@link LayoutEngine#layoutNode(CSSNode, float)}
@@ -38,35 +36,38 @@ namespace Facebook.CSSLayout
 
 		public void resetResult()
 		{
-			Left = 0;
-			Top = 0;
-			Right = 0;
-			Bottom = 0;
-			Width = CSSConstants.Undefined;
-			Height = CSSConstants.Undefined;
-			Direction = CSSDirection.LTR;
+			FillArray(position, 0);
+			FillArray(dimensions, CSSConstants.UNDEFINED);
+
+			direction = CSSDirection.LTR;
 		}
 
 		public void copy(CSSLayout layout)
 		{
-			Left = layout.Left;
-			Top = layout.Top;
-			Right = layout.Right;
-			Bottom = layout.Bottom;
-			Width = layout.Width;
-			Height = layout.Height;
-			Direction = layout.Direction;
+			position[POSITION_LEFT] = layout.position[POSITION_LEFT];
+			position[POSITION_TOP] = layout.position[POSITION_TOP];
+			position[POSITION_RIGHT] = layout.position[POSITION_RIGHT];
+			position[POSITION_BOTTOM] = layout.position[POSITION_BOTTOM];
+			dimensions[DIMENSION_WIDTH] = layout.dimensions[DIMENSION_WIDTH];
+			dimensions[DIMENSION_HEIGHT] = layout.dimensions[DIMENSION_HEIGHT];
+			direction = layout.direction;
 		}
 
 		public override string ToString()
 		{
-			return "Layout: {" +
-					"Left: " + Left + ", " +
-					"Top: " + Top + ", " +
-					"Width: " + Width + ", " +
-					"Height: " + Height + ", " +
-					"Direction: " + Direction +
-					"}";
+			return "layout: {" +
+				"left: " + position[POSITION_LEFT] + ", " +
+				"top: " + position[POSITION_TOP] + ", " +
+				"width: " + dimensions[DIMENSION_WIDTH] + ", " +
+				"height: " + dimensions[DIMENSION_HEIGHT] + ", " +
+				"direction: " + direction +
+				"}";
+		}
+
+		static void FillArray<T>(T[] array, T value)
+		{
+			for (var i = 0; i != array.Length; ++i)
+				array[i] = value;
 		}
 	}
 }

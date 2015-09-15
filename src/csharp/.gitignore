@@ -8,3 +8,4 @@ _NCrunch_*/
 *.ncrunchsolution
 *.ncrunchproject
 *.nupkg
+.vs/

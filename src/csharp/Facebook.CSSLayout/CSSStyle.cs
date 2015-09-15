@@ -28,13 +28,17 @@ namespace Facebook.CSSLayout
 		public Spacing padding = new Spacing();
 		public Spacing border = new Spacing();
 
-		public float positionTop = CSSConstants.Undefined;
-		public float positionBottom = CSSConstants.Undefined;
-		public float positionLeft = CSSConstants.Undefined;
-		public float positionRight = CSSConstants.Undefined;
+		public float[] position = {
+			CSSConstants.UNDEFINED,
+			CSSConstants.UNDEFINED,
+			CSSConstants.UNDEFINED,
+			CSSConstants.UNDEFINED
+		};
 
-		public float width = CSSConstants.Undefined;
-		public float height = CSSConstants.Undefined;
+		public float[] dimensions = {
+			CSSConstants.UNDEFINED,
+			CSSConstants.UNDEFINED
+		};
 
 		public float minWidth = CSSConstants.Undefined;
 		public float minHeight = CSSConstants.Undefined;

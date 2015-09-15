@@ -10,6 +10,7 @@
 using System;
 using System.Collections.Generic;
 using System.Text;
+using static Facebook.CSSLayout.CSSLayout;
 
 namespace Facebook.CSSLayout
 {
@@ -53,6 +54,8 @@ namespace Facebook.CSSLayout
 		internal readonly CachedCSSLayout lastLayout = new CachedCSSLayout();
 
 		internal int lineIndex = 0;
+		internal CSSNode nextAbsoluteChild;
+		internal CSSNode nextFlexChild;
 
 		// 4 is kinda arbitrary, but the default of 10 seems really high for an average View.
 		readonly List<CSSNode> mChildren = new List<CSSNode>(4);
@@ -139,7 +142,7 @@ namespace Facebook.CSSLayout
 			get { return mMeasureFunction != null; }
 		}
 
-		internal MeasureOutput measure(float width)
+		internal MeasureOutput measure(MeasureOutput measureOutput, float width)
 		{
 			if (!IsMeasureDefined)
 			{
@@ -149,18 +152,20 @@ namespace Facebook.CSSLayout
 		}
 
 		/**
-	   * Performs the actual layout and saves the results in {@link #layout}
-	   */
+	     * Performs the actual layout and saves the results in {@link #layout}
+	     */
 
 		public void CalculateLayout()
 		{
 			layout.resetResult();
-			LayoutEngine.layoutNode(this, CSSConstants.Undefined, null);
+			LayoutEngine.layoutNode(DummyLayoutContext, this, CSSConstants.Undefined, null);
 		}
 
+		static readonly CSSLayoutContext DummyLayoutContext = new CSSLayoutContext();
+
 		/**
-	   * See {@link LayoutState#DIRTY}.
-	   */
+	     * See {@link LayoutState#DIRTY}.
+	     */
 
 		public bool IsDirty
 		{
@@ -171,8 +176,8 @@ namespace Facebook.CSSLayout
 		}
 
 		/**
-	   * See {@link LayoutState#HAS_NEW_LAYOUT}.
-	   */
+	     * See {@link LayoutState#HAS_NEW_LAYOUT}.
+	     */
 
 		public bool HasNewLayout
 		{
@@ -217,10 +222,10 @@ namespace Facebook.CSSLayout
 		}
 
 		/**
-	   * Tells the node that the current values in {@link #layout} have been seen. Subsequent calls
-	   * to {@link #hasNewLayout()} will return false until this node is laid out with new parameters.
-	   * You must call this each time the layout is generated if the node has a new layout.
-	   */
+	     * Tells the node that the current values in {@link #layout} have been seen. Subsequent calls
+	     * to {@link #hasNewLayout()} will return false until this node is laid out with new parameters.
+	     * You must call this each time the layout is generated if the node has a new layout.
+	    */
 
 		public void MarkLayoutSeen()
 		{
@@ -398,26 +403,26 @@ namespace Facebook.CSSLayout
 
 		public float PositionTop
 		{
-			get { return style.positionTop; }
-			set { updateFloatValue(ref style.positionTop, value); }
+			get { return style.position[POSITION_TOP]; }
+			set { updateFloatValue(ref style.position[POSITION_TOP], value); }
 		}
 
 		public float PositionBottom
 		{
-			get { return style.positionBottom; }
-			set { updateFloatValue(ref style.positionBottom, value); }
+			get { return style.position[POSITION_BOTTOM]; }
+			set { updateFloatValue(ref style.position[POSITION_BOTTOM], value); }
 		}
 
 		public float PositionLeft
 		{
-			get { return style.positionLeft; }
-			set { updateFloatValue(ref style.positionLeft, value); }
+			get { return style.position[POSITION_LEFT]; }
+			set { updateFloatValue(ref style.position[POSITION_LEFT], value); }
 		}
 
 		public float PositionRight
 		{
-			get { return style.positionRight; }
-			set { updateFloatValue(ref style.positionRight, value); }
+			get { return style.position[POSITION_RIGHT]; }
+			set { updateFloatValue(ref style.position[POSITION_RIGHT], value); }
 		}
 
 		public float StyleWidth
@@ -428,8 +433,8 @@ namespace Facebook.CSSLayout
 
 		public float Width
 		{
-			get { return style.width; }
-			set { updateFloatValue(ref style.width, value); }
+			get { return style.dimensions[DIMENSION_WIDTH]; }
+			set { updateFloatValue(ref style.dimensions[DIMENSION_HEIGHT], value); }
 		}
 
 		public float StyleHeight
@@ -440,8 +445,8 @@ namespace Facebook.CSSLayout
 
 		public float Height
 		{
-			get { return style.height; }
-			set { updateFloatValue(ref style.height, value); }
+			get { return style.dimensions[DIMENSION_HEIGHT]; }
+			set { updateFloatValue(ref style.dimensions[DIMENSION_HEIGHT], value); }
 		}
 
 		public float MinWidth
@@ -485,17 +490,17 @@ namespace Facebook.CSSLayout
 			dirty();
 		}
 
-		public float LayoutX { get { return layout.Left; } }
-		public float LayoutY { get { return layout.Top; } }
-		public float LayoutWidth { get { return layout.Width; } }
-		public float LayoutHeight { get { return layout.Height; } }
-		public CSSDirection LayoutDirection { get { return layout.Direction; } }
+		public float LayoutX => layout.position[POSITION_LEFT];
+		public float LayoutY => layout.position[POSITION_TOP];
+		public float LayoutWidth => layout.dimensions[DIMENSION_WIDTH];
+		public float LayoutHeight => layout.dimensions[DIMENSION_HEIGHT];
+		public CSSDirection LayoutDirection => layout.direction;
 
 		/**
 		 * Get this node's padding, as defined by style + default padding.
 		 */
 
-		public Spacing Padding { get { return style.padding; } }
+		public Spacing Padding => style.padding;
 
 		/**
 		 * Set a default padding (left/top/right/bottom) for this node.

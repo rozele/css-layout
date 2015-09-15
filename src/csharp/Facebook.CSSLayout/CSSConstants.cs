@@ -17,10 +17,14 @@ namespace Facebook.CSSLayout
 
 		public static bool IsUndefined(float value) 
 		{
-			return float.IsNaN(value);
+			return isUndefined(value);
 		}
 
 		internal static readonly float UNDEFINED = Undefined;
-		internal static readonly Func<float, bool> isUndefined = IsUndefined;
+
+		internal static bool isUndefined(float value)
+		{
+			return float.IsNaN(value);
+		}
 	}
 }
