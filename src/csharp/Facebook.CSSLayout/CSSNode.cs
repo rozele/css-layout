@@ -54,8 +54,8 @@ namespace Facebook.CSSLayout
 		internal readonly CachedCSSLayout lastLayout = new CachedCSSLayout();
 
 		internal int lineIndex = 0;
-		internal CSSNode nextAbsoluteChild;
-		internal CSSNode nextFlexChild;
+		internal /*package*/ CSSNode nextAbsoluteChild;
+		internal /*package*/ CSSNode nextFlexChild;
 
 		// 4 is kinda arbitrary, but the default of 10 seems really high for an average View.
 		readonly List<CSSNode> mChildren = new List<CSSNode>(4);

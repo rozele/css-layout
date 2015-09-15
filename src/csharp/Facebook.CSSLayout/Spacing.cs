@@ -68,14 +68,22 @@ namespace Facebook.CSSLayout
 		 */
 		internal static readonly int ALL = (int)SpacingType.All;
 
-		/**
-		 * @return an instance of an array that can be used with {@link #updateSpacing}. Stores
-		 * the value for each spacing type or NaN if it hasn't been explicitly set.
-		 */
+		static readonly int[] sFlagsMap = {
+			1, /*LEFT*/
+			2, /*TOP*/
+			4, /*RIGHT*/
+			8, /*BOTTOM*/
+			16, /*VERTICAL*/
+			32, /*HORIZONTAL*/
+			64, /*START*/
+			128, /*END*/
+			256, /*ALL*/
+		  };
 
 		float[] mSpacing = newFullSpacingArray();
 		[Nullable] float[] mDefaultSpacing = null;
-		float[] mSpacingResult = newSpacingResultArray();
+		int mValueFlags = 0;
+		bool mHasAliasesSet;
 
 		/**
 		 * Set a spacing value.
@@ -92,6 +100,21 @@ namespace Facebook.CSSLayout
 			if (!FloatUtil.floatsEqual(mSpacing[spacingType], value))
 			{
 				mSpacing[spacingType] = value;
+
+				if (CSSConstants.isUndefined(value))
+				{
+					mValueFlags &= ~sFlagsMap[spacingType];
+				}
+				else
+				{
+					mValueFlags |= sFlagsMap[spacingType];
+				}
+
+				mHasAliasesSet =
+					(mValueFlags & sFlagsMap[ALL]) != 0 ||
+					(mValueFlags & sFlagsMap[VERTICAL]) != 0 ||
+					(mValueFlags & sFlagsMap[HORIZONTAL]) != 0;
+
 				return true;
 			}
 			return false;
@@ -127,18 +150,34 @@ namespace Facebook.CSSLayout
 
 		internal float get(int spacingType)
 		{
-			int secondType = spacingType == TOP || spacingType == BOTTOM ? VERTICAL : HORIZONTAL;
-			float defaultValue = spacingType == START || spacingType == END ? CSSConstants.UNDEFINED : 0;
-			return
-				!CSSConstants.isUndefined(mSpacing[spacingType])
-					? mSpacing[spacingType]
-					: !CSSConstants.isUndefined(mSpacing[secondType])
-						? mSpacing[secondType]
-						: !CSSConstants.isUndefined(mSpacing[ALL])
-							? mSpacing[ALL]
-							: mDefaultSpacing != null
-								? mDefaultSpacing[spacingType]
-								: defaultValue;
+			float defaultValue = (mDefaultSpacing != null)
+				? mDefaultSpacing[spacingType]
+				: (spacingType == START || spacingType == END ? CSSConstants.UNDEFINED : 0);
+
+			if (mValueFlags == 0)
+			{
+				return defaultValue;
+			}
+
+			if ((mValueFlags & sFlagsMap[spacingType]) != 0)
+			{
+				return mSpacing[spacingType];
+			}
+
+			if (mHasAliasesSet)
+			{
+				int secondType = spacingType == TOP || spacingType == BOTTOM ? VERTICAL : HORIZONTAL;
+				if ((mValueFlags & sFlagsMap[secondType]) != 0)
+				{
+					return mSpacing[secondType];
+				}
+				else if ((mValueFlags & sFlagsMap[ALL]) != 0)
+				{
+					return mSpacing[ALL];
+				}
+			}
+
+			return defaultValue;
 		}
 
 		public float Get(SpacingType spacingType)
@@ -162,6 +201,19 @@ namespace Facebook.CSSLayout
 		public float GetRaw(SpacingType spacingType)
 		{
 			return getRaw((int) spacingType);
+		}
+
+		/**
+		 * Try to get start value and fallback to given type if not defined. This is used privately
+		 * by the layout engine as a more efficient way to fetch direction-aware values by
+		 * avoid extra method invocations.
+		 */
+		internal float getWithFallback(int spacingType, int fallbackType)
+		{
+			return
+				(mValueFlags & sFlagsMap[spacingType]) != 0
+					? mSpacing[spacingType]
+					: get(fallbackType);
 		}
 
 		static float[] newFullSpacingArray()
