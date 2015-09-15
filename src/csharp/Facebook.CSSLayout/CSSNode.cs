@@ -32,20 +32,20 @@ namespace Facebook.CSSLayout
 		enum LayoutState
 		{
 			/**
-		 * Some property of this node or its children has changes and the current values in
-		 * {@link #layout} are not valid.
-		 */
+		     * Some property of this node or its children has changes and the current values in
+		     * {@link #layout} are not valid.
+		     */
 			DIRTY,
 
 			/**
-		 * This node has a new layout relative to the last time {@link #MarkLayoutSeen()} was called.
-		 */
+		     * This node has a new layout relative to the last time {@link #MarkLayoutSeen()} was called.
+		     */
 			HAS_NEW_LAYOUT,
 
 			/**
-		 * {@link #layout} is valid for the node's properties and this layout has been marked as
-		 * having been seen.
-		 */
+		     * {@link #layout} is valid for the node's properties and this layout has been marked as
+		     * having been seen.
+		     */
 			UP_TO_DATE,
 		}
 
@@ -116,8 +116,8 @@ namespace Facebook.CSSLayout
 		}
 
 		/**
-	   * @return the index of the given child, or -1 if the child doesn't exist in this node.
-	   */
+	     * @return the index of the given child, or -1 if the child doesn't exist in this node.
+	     */
 
 		public int IndexOf(CSSNode child)
 		{
@@ -188,7 +188,7 @@ namespace Facebook.CSSLayout
 			Additional function to mark this node as dirty without requiring a derived class, thereby undermining
 			the original protection of the dirty() method. 
 		
-			Calling this function is only required when the measure function is the same, but changes its behavior.
+			Calling this function is only required when the measure function stays the same, but changes its behavior.
 			For all other property changes, the node is automatically marked dirty.
 		*/
 
@@ -225,7 +225,7 @@ namespace Facebook.CSSLayout
 	     * Tells the node that the current values in {@link #layout} have been seen. Subsequent calls
 	     * to {@link #hasNewLayout()} will return false until this node is laid out with new parameters.
 	     * You must call this each time the layout is generated if the node has a new layout.
-	    */
+	     */
 
 		public void MarkLayoutSeen()
 		{

@@ -7,11 +7,9 @@
  * of patent rights can be found in the PATENTS file in the same directory.
  */
 
-using System;
-
 namespace Facebook.CSSLayout
 {
-	public class CSSConstants 
+	public static class CSSConstants 
 	{
 		public static readonly float Undefined = float.NaN;
 

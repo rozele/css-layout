@@ -78,7 +78,7 @@ namespace Facebook.CSSLayout
 			64, /*START*/
 			128, /*END*/
 			256, /*ALL*/
-		  };
+		};
 
 		float[] mSpacing = newFullSpacingArray();
 		[Nullable] float[] mDefaultSpacing = null;
