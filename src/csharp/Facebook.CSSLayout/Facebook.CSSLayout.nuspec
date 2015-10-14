@@ -10,7 +10,7 @@
     <projectUrl>https://github.com/pragmatrix/css-layout</projectUrl>
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
     <description>$description$</description>
-    <releaseNotes>Synchronize version number with Facebook's css-layout repository.</releaseNotes>
+    <releaseNotes>CSSNode.Width now actually sets the width instead of height.</releaseNotes>
     <copyright>Copyright 2015 Facebook</copyright>
     <tags>flexbox flex-box css layout css-layout facebook</tags>
   </metadata>
