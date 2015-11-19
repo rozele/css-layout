@@ -2,13 +2,13 @@ language: node_js
 node_js:
   - "0.12"
 
-sudo: false
+sudo: true
 
 before_install:
+  - sudo apt-get install -qq mono
   - npm install grunt-cli -g
 
 addons:
   apt:
     packages:
       - gcc
-      - mono
