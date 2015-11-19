@@ -6,7 +6,7 @@ sudo: true
 
 before_install:
   - sudo apt-get update -qq
-  - sudo apt-get install -qq mono-devel mono-xbuild
+  - sudo apt-get install -qq mono-complete
   - npm install grunt-cli -g
 
 addons:
