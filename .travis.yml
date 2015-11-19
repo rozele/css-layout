@@ -5,6 +5,7 @@ node_js:
 sudo: true
 
 before_install:
+  - sudo apt-get update -qq
   - sudo apt-get install -qq mono
   - npm install grunt-cli -g
 
