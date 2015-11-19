@@ -147,7 +147,7 @@ module.exports = function(grunt) {
         command: 'jar cf <%= config.distFolder %>/<%= config.libName %>.jar <%= config.javaSource %>'
       },
       csharpCompile: {
-        command: 'xbuild /m /verbosity:m /nologo src/csharp/Facebook.CSSLayout.sln /p:Configuration=Release /t:"Facebook_CSSLayout:Rebuild" /t:"Facebook_CSSLayout_Tests:Rebuild"'
+        command: 'xbuild /verbosity:m /nologo src/csharp/Facebook.CSSLayout.sln /p:Configuration=Release /t:"Facebook_CSSLayout:Rebuild;Facebook_CSSLayout_Tests:Rebuild"'
       },
       csharpTestExecute: {
         command: 'nunit-console src/csharp/Facebook.CSSLayout.Tests/bin/Release/Facebook.CSSLayout.Tests.dll'   
