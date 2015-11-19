@@ -170,7 +170,7 @@ module.exports = function(grunt) {
   grunt.registerTask('test-c', ['shell:cCompile', 'shell:cTestExecute', 'clean:cTest']);
 
   // Transpiles the JavaScript to C and Java, running tests
-  grunt.registerTask('transpile', ['execute:transpile', 'test-c', 'test-java']);
+  grunt.registerTask('transpile', ['execute:transpile', 'test-c', 'test-java', 'test-csharp']);
 
   // Lints and tests the JavaScritp using Chrome
   grunt.registerTask('test-javascript', ['eslint', 'karma']);
