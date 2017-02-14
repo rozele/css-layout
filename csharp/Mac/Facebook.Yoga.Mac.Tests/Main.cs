@@ -8,11 +8,9 @@
 
 using System;
 using System.Collections.Generic;
-using System.Reflection;
 using AppKit;
 using Foundation;
 using GuiUnit;
-//using GuiUnit;
 using NUnit.Framework;
 
 namespace Facebook.Yoga.Mac.Tests
@@ -28,7 +26,7 @@ namespace Facebook.Yoga.Mac.Tests
 		static void RunTests()
 		{
 			TestRunner.MainLoop = new NSRunLoopIntegration();
-			List<string> args = new List<string>() { typeof(MainClass).Assembly.Location, "-labels", "-noheader" };
+			List<string> args = new List<string>() { typeof(MainClass).Assembly.Location, "-labels", "-noheader", "-result=TEST-Mac.xml" };
 
 
 			TestRunner.Main(args.ToArray());
